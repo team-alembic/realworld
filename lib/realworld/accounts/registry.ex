@@ -6,5 +6,6 @@ defmodule Realworld.Accounts.Registry do
 
   entries do
     entry Realworld.Accounts.User
+    entry Realworld.Accounts.Token
   end
 end

@@ -16,7 +16,8 @@ defmodule Realworld.Application do
       RealworldWeb.Endpoint,
       # Start a worker by calling: Realworld.Worker.start_link(arg)
       # {Realworld.Worker, arg}
-      Realworld.Repo
+      Realworld.Repo,
+      {AshAuthentication.Supervisor, otp_app: :realworld}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

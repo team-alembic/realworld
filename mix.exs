@@ -47,7 +47,8 @@ defmodule Realworld.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:ash, "~> 2.5.12"},
       {:ash_postgres, "~> 1.3.2"},
-      {:elixir_sense, github: "elixir-lsp/elixir_sense", only: [:dev, :test]}
+      {:elixir_sense, github: "elixir-lsp/elixir_sense", only: [:dev, :test]},
+      {:ash_authentication, "~> 3.7.6"}
     ]
   end
 
