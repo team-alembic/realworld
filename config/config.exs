@@ -47,3 +47,7 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+# https://ash-hq.org/docs/guides/ash/latest/tutorials/get-started#temporary-config
+# For backwards compatibility, the following configuration is required. Don’t worry about it for now, just know that it needs to be set until the behavior is deprecated in the next major release.
+config :ash, :use_all_identities_in_manage_relationship?, false
