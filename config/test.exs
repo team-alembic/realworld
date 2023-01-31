@@ -21,10 +21,10 @@ config :phoenix, :plug_init_mode, :runtime
 # The MIX_TEST_PARTITION environment variable can be used
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
-config :helpdesk, Helpdesk.Repo,
+config :realworld, Realworld.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "helpdesk_test#{System.get_env("MIX_TEST_PARTITION")}",
+  database: "realworld_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10

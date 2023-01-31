@@ -5,6 +5,6 @@ defmodule Realworld.Accounts.Registry do
     ]
 
   entries do
-    entry Realworld.Accounts.Ticket
+    entry Realworld.Accounts.User
   end
 end
