@@ -1,5 +1,6 @@
 defmodule RealworldWeb.Router do
   use RealworldWeb, :router
+  use AshAuthentication.Phoenix.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -8,14 +9,20 @@ defmodule RealworldWeb.Router do
     plug :put_root_layout, {RealworldWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :load_from_session
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :load_from_bearer
   end
 
   scope "/", RealworldWeb do
     pipe_through :browser
+
+    sign_in_route()
+    sign_out_route AuthController
+    auth_routes_for Realworld.Accounts.User, to: AuthController
 
     get "/", PageController, :index
   end

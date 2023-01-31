@@ -8,32 +8,10 @@ defmodule Realworld.Accounts.User do
     repo Realworld.Repo
   end
 
-  actions do
-    create :register do
-      accept [:email, :username, :hashed_password]
-
-      argument :email, :string do
-        allow_nil? false
-      end
-
-      argument :username, :string do
-        allow_nil? false
-      end
-
-      argument :hashed_password, :string do
-        allow_nil? false
-      end
-
-      validate present(:email)
-      validate present(:username)
-      validate present(:hashed_password)
-    end
-  end
-
   attributes do
     uuid_primary_key(:id)
 
-    attribute(:email, :string, allow_nil?: false)
+    # attribute(:email, :string, allow_nil?: false)
     attribute(:username, :string, allow_nil?: false)
     attribute(:hashed_password, :string, allow_nil?: false, sensitive?: true)
     attribute(:bio, :string)
@@ -44,7 +22,7 @@ defmodule Realworld.Accounts.User do
   end
 
   identities do
-    identity :unique_email, [:email]
+    # identity :unique_email, [:email]
     identity :unique_username, [:username]
   end
 
@@ -53,7 +31,8 @@ defmodule Realworld.Accounts.User do
 
     strategies do
       password :password do
-        identity_field :email
+        identity_field :username
+        hashed_password_field :hashed_password
       end
     end
 
@@ -62,7 +41,7 @@ defmodule Realworld.Accounts.User do
       token_resource Realworld.Accounts.Token
 
       signing_secret fn _, _ ->
-        Application.get_env(:realworld, Realworld.Endpoint)[:secret_key_base]
+        Application.fetch_env(:realworld, :token_signing_secret)
       end
     end
   end

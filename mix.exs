@@ -48,7 +48,8 @@ defmodule Realworld.MixProject do
       {:ash, "~> 2.5.12"},
       {:ash_postgres, "~> 1.3.2"},
       {:elixir_sense, github: "elixir-lsp/elixir_sense", only: [:dev, :test]},
-      {:ash_authentication, "~> 3.7.6"}
+      {:ash_authentication, "~> 3.7.6"},
+      {:ash_authentication_phoenix, "~> 1.4.6"}
     ]
   end
 
