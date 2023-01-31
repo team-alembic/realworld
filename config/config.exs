@@ -50,6 +50,8 @@ config :ash, :use_all_identities_in_manage_relationship?, false
 
 config :realworld, :ash_apis, [Realworld.Accounts]
 
+config :realworld, ecto_repos: [Realworld.Repo]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
