@@ -44,7 +44,9 @@ defmodule RealworldWeb do
 
   def live_view do
     quote do
-      use Phoenix.Component,
+      use Phoenix.Component
+
+      use Phoenix.LiveView,
         layout: {RealworldWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())

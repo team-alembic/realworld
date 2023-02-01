@@ -2,9 +2,13 @@ defmodule RealworldWeb.AuthController do
   use RealworldWeb, :controller
   use AshAuthentication.Phoenix.Controller
 
+  def new(conn, _) do
+    conn
+    |> render("new.html")
+  end
+
   def success(conn, _activity, user, _token) do
-    IO.inspect("HERE")
-    return_to = get_session(conn, :return_to) || Routes.page_path(conn, :index)
+    return_to = get_session(conn, :return_to) || Routes.page_index_path(conn, :index)
 
     conn
     |> delete_session(:return_to)
@@ -20,7 +24,7 @@ defmodule RealworldWeb.AuthController do
   end
 
   def sign_out(conn, _params) do
-    return_to = get_session(conn, :return_to) || Routes.page_path(conn, :index)
+    return_to = get_session(conn, :return_to) || Routes.page_index_path(conn, :index)
 
     conn
     |> clear_session()
