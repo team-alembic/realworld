@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="csrf-token" content={csrf_token_value()}>
-    <.live_title suffix= "· Phoenix Framework"><%= assigns[:page_title] || "Conduit" %></.live_title>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
-    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content={csrf_token_value()} />
+    <.live_title suffix="· Phoenix Framework">
+      <%= assigns[:page_title] || "Conduit" %>
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} />
+    <script
+      defer
+      phx-track-static
+      type="text/javascript"
+      src={Routes.static_path(@conn, "/assets/app.js")}
+    >
+    </script>
     <link
       href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
       rel="stylesheet"
@@ -31,16 +39,16 @@
               <a class="nav-link active" href="">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href=""> <i class="ion-compose"></i>&nbsp;New Article </a>
+              <a class="nav-link" href=""><i class="ion-compose"></i>&nbsp;New Article</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href=""><i class="ion-gear-a"></i>&nbsp;Settings </a>
+              <a class="nav-link" href=""><i class="ion-gear-a"></i>&nbsp;Settings</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href={Routes.auth_path(@conn, :new)}>Sign in</a>
+              <a class="nav-link" href={Routes.auth_index_path(@conn, :new)}>Sign in</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href={Routes.auth_path(@conn, :new)}>Sign up</a>
+              <a class="nav-link" href={Routes.auth_index_path(@conn, :new)}>Sign up</a>
             </li>
           </ul>
         </div>

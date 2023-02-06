@@ -23,6 +23,7 @@ defmodule RealworldWeb do
 
       import Plug.Conn
       import RealworldWeb.Gettext
+      import Phoenix.LiveView.Controller
       alias RealworldWeb.Router.Helpers, as: Routes
     end
   end

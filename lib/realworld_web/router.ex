@@ -20,10 +20,10 @@ defmodule RealworldWeb.Router do
   scope "/", RealworldWeb do
     pipe_through :browser
 
-    get("/sign-in", AuthController, :new)
     sign_out_route AuthController
     auth_routes_for Realworld.Accounts.User, to: AuthController
 
+    live "/sign-in", AuthLive.Index, :new
     live "/", PageLive.Index, :index
   end
 
