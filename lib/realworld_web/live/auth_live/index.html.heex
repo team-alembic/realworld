@@ -7,39 +7,11 @@
           <a href="">Have an account?</a>
         </p>
 
-        <ul class="error-messages">
-          <li>That email is already taken</li>
-        </ul>
-
-        <.form
-          :let={f}
-          for={@form}
-          method="POST"
-          phx-change="change"
-          phx-submit="submit"
-          phx-target={@myself}
-          action={}
-        >
-          <fieldset class="form-group">
-            <%= text_input(f, :username,
-              class: "form-control form-control-lg",
-              placeholder: "Your Name"
-            ) %>
-          </fieldset>
-          <fieldset class="form-group">
-            <%= text_input(f, :email,
-              class: "form-control form-control-lg",
-              placeholder: "Email"
-            ) %>
-          </fieldset>
-          <fieldset class="form-group">
-            <%= password_input(f, :password,
-              class: "form-control form-control-lg",
-              placeholder: "Password"
-            ) %>
-          </fieldset>
-          <%= submit("Sign up", class: "btn btn-lg btn-primary pull-xs-right") %>
-        </.form>
+        <.live_component
+          module={RealworldWeb.AuthLive.RegisterForm}
+          id="sign-up-form"
+          form={@form}
+        />
       </div>
     </div>
   </div>

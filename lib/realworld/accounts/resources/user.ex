@@ -33,6 +33,7 @@ defmodule Realworld.Accounts.User do
       password :password do
         identity_field :username
         hashed_password_field :hashed_password
+        confirmation_required? false
       end
     end
 

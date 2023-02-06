@@ -19,23 +19,7 @@ defmodule RealworldWeb.AuthLive.Index do
     socket
     |> assign(
       :form,
-      Form.for_create(User, :register_with_password, api: Accounts)
+      Form.for_create(User, :register_with_password, api: Accounts, as: "user")
     )
   end
-
-  # def handle_event("validate", %{"user" => user_params}, socket) do
-  #   changeset = Accounts.change_user_registration(%User{}, user_params)
-  #   {:noreply, assign(socket, changeset: changeset)}
-  # end
-
-  # def handle_event("save", %{"user" => user_params}, socket) do
-  #   case Accounts.register_user(user_params) do
-  #     {:ok, user} ->
-  #       changeset = Accounts.change_user_registration(user)
-  #       {:noreply, assign(socket, changeset: changeset)}
-
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       {:noreply, assign(socket, :changeset, changeset)}
-  #   end
-  # end
 end

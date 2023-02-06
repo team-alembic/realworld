@@ -1,0 +1,35 @@
+<div>
+  <ul class="error-messages">
+    <li>That email is already taken</li>
+  </ul>
+  <.form
+    :let={f}
+    for={@form}
+    phx-change="validate"
+    phx-submit="submit"
+    phx-trigger-action={@trigger_action}
+    phx-target={@myself}
+    action={Routes.auth_path(@socket, {:user, :password, :register})}
+    method="POST"
+  >
+    <fieldset class="form-group">
+      <%= text_input(f, :username,
+        class: "form-control form-control-lg",
+        placeholder: "Your Name"
+      ) %>
+    </fieldset>
+    <fieldset class="form-group">
+      <%= text_input(f, :email,
+        class: "form-control form-control-lg",
+        placeholder: "Email"
+      ) %>
+    </fieldset>
+    <fieldset class="form-group">
+      <%= password_input(f, :password,
+        class: "form-control form-control-lg",
+        placeholder: "Password"
+      ) %>
+    </fieldset>
+    <%= submit("Sign up", class: "btn btn-lg btn-primary pull-xs-right") %>
+  </.form>
+</div>
