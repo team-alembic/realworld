@@ -1,7 +1,13 @@
 <div>
-  <%!-- <ul class="error-messages">
-    <li>That email is already taken</li>
-  </ul> --%>
+  <ul class="error-messages">
+    <%= if @form.errors do %>
+      <%= for {k, v} <- @errors do %>
+        <li>
+          <%= humanize("#{k} #{v}") %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
   <.form
     :let={f}
     for={@form}

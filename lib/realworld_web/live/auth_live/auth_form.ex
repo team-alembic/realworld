@@ -26,6 +26,7 @@ defmodule RealworldWeb.AuthLive.AuthForm do
     socket =
       socket
       |> assign(:form, form)
+      |> assign(:errors, Form.errors(form))
       |> assign(:trigger_action, form.valid?)
 
     {:noreply, socket}
