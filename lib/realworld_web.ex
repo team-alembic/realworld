@@ -48,7 +48,7 @@ defmodule RealworldWeb do
       use Phoenix.Component
 
       use Phoenix.LiveView,
-        layout: {RealworldWeb.LayoutView, "live.html"}
+        layout: {RealworldWeb.LayoutView, :live}
 
       unquote(view_helpers())
     end
