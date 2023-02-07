@@ -8,6 +8,10 @@ defmodule Realworld.Accounts.User do
     repo Realworld.Repo
   end
 
+  actions do
+    defaults [:read, :update]
+  end
+
   attributes do
     uuid_primary_key(:id)
 

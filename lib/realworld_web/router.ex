@@ -20,13 +20,19 @@ defmodule RealworldWeb.Router do
   scope "/", RealworldWeb do
     pipe_through :browser
 
-    sign_out_route AuthController
     auth_routes_for Realworld.Accounts.User, to: AuthController
 
-    live "/editor", EditorLive.Index, :index
     live "/register", AuthLive.Index, :register
     live "/login", AuthLive.Index, :login
     live "/", PageLive.Index, :index
+  end
+
+  scope "/", RealworldWeb do
+    pipe_through([:browser, :require_authenticated_user])
+
+    sign_out_route AuthController
+    live "/editor", EditorLive.Index, :index
+    live "/settings", SettingsLive.Index, :index
   end
 
   # Other scopes may use custom stacks.
@@ -60,6 +66,17 @@ defmodule RealworldWeb.Router do
       pipe_through :browser
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  def require_authenticated_user(conn, _opts) do
+    if conn.assigns[:current_user] do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must log in to access this page.")
+      |> redirect(to: "/")
+      |> halt()
     end
   end
 end
