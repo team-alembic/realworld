@@ -1,4 +1,4 @@
-defmodule RealworldWeb.AuthLive.RegisterForm do
+defmodule RealworldWeb.AuthLive.AuthForm do
   use RealworldWeb, :live_component
   alias AshPhoenix.Form
 

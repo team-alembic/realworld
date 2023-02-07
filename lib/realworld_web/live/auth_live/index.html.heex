@@ -2,15 +2,18 @@
   <div class="container page">
     <div class="row">
       <div class="col-md-6 offset-md-3 col-xs-12">
-        <h1 class="text-xs-center">Sign up</h1>
+        <h1 class="text-xs-center"><%= @cta %></h1>
         <p class="text-xs-center">
-          <a href="">Have an account?</a>
+          <a href={@alternative_path}><%= @alternative %></a>
         </p>
 
         <.live_component
-          module={RealworldWeb.AuthLive.RegisterForm}
-          id="sign-up-form"
+          module={RealworldWeb.AuthLive.AuthForm}
+          id={@form_id}
           form={@form}
+          live_action={@live_action}
+          action={@action}
+          cta={@cta}
         />
       </div>
     </div>

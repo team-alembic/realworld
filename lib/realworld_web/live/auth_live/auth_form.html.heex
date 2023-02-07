@@ -1,7 +1,7 @@
 <div>
-  <ul class="error-messages">
+  <%!-- <ul class="error-messages">
     <li>That email is already taken</li>
-  </ul>
+  </ul> --%>
   <.form
     :let={f}
     for={@form}
@@ -9,15 +9,17 @@
     phx-submit="submit"
     phx-trigger-action={@trigger_action}
     phx-target={@myself}
-    action={Routes.auth_path(@socket, {:user, :password, :register})}
+    action={@action}
     method="POST"
   >
-    <fieldset class="form-group">
-      <%= text_input(f, :username,
-        class: "form-control form-control-lg",
-        placeholder: "Your Name"
-      ) %>
-    </fieldset>
+    <%= if @live_action in [:register] do %>
+      <fieldset class="form-group">
+        <%= text_input(f, :username,
+          class: "form-control form-control-lg",
+          placeholder: "Your Name"
+        ) %>
+      </fieldset>
+    <% end %>
     <fieldset class="form-group">
       <%= text_input(f, :email,
         class: "form-control form-control-lg",
@@ -30,6 +32,6 @@
         placeholder: "Password"
       ) %>
     </fieldset>
-    <%= submit("Sign up", class: "btn btn-lg btn-primary pull-xs-right") %>
+    <%= submit(@cta, class: "btn btn-lg btn-primary pull-xs-right") %>
   </.form>
 </div>

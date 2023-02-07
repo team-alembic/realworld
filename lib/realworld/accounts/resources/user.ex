@@ -11,7 +11,7 @@ defmodule Realworld.Accounts.User do
   attributes do
     uuid_primary_key(:id)
 
-    # attribute(:email, :string, allow_nil?: false)
+    attribute(:email, :string, allow_nil?: false)
     attribute(:username, :string, allow_nil?: false)
     attribute(:hashed_password, :string, allow_nil?: false, sensitive?: true)
     attribute(:bio, :string)
@@ -22,7 +22,7 @@ defmodule Realworld.Accounts.User do
   end
 
   identities do
-    # identity :unique_email, [:email]
+    identity :unique_email, [:email]
     identity :unique_username, [:username]
   end
 
@@ -31,7 +31,7 @@ defmodule Realworld.Accounts.User do
 
     strategies do
       password :password do
-        identity_field :username
+        identity_field :email
         hashed_password_field :hashed_password
         confirmation_required? false
       end
