@@ -7,8 +7,26 @@ defmodule Realworld.Articles.Article do
     repo Realworld.Repo
   end
 
+  # code_interface do
+  #   define_for Realworld.Articles
+
+  #   define :publish, args: [:title, :description, :body, :user]
+  # end
+
   actions do
     defaults [:create, :read, :update, :destroy]
+
+    create :publish do
+      primary? true
+      accept [:title, :description, :body]
+      argument :user, :uuid, allow_nil?: false
+
+      # ? confirm this approach
+      change manage_relationship(:user, on_lookup: :relate, on_no_match: :error)
+
+      # ? confirm this approach
+      change Realworld.Articles.Changes.SlugifyTitle
+    end
   end
 
   attributes do
@@ -37,7 +55,7 @@ defmodule Realworld.Articles.Article do
   relationships do
     belongs_to :user, Realworld.Accounts.User do
       api Realworld.Accounts
-      allow_nil? false
+      writable? true
     end
 
     many_to_many :tag_list, Realworld.Articles.Tag do
