@@ -38,20 +38,32 @@
               <!-- Add "active" class when you're on that page" -->
               <a class="nav-link active" href={Routes.page_index_path(@conn, :index)}>Home</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/editor"><i class="ion-compose"></i>&nbsp;New Article</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href={Routes.settings_index_path(@conn, :index)}>
-                <i class="ion-gear-a"></i>&nbsp;Settings
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href={Routes.auth_index_path(@conn, :login)}>Sign in</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href={Routes.auth_index_path(@conn, :register)}>Sign up</a>
-            </li>
+
+            <%= if @conn.assigns.current_user do %>
+              <li class="nav-item">
+                <a class="nav-link" href="/editor">
+                  <i class="ion-compose"></i>&nbsp;New Article
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href={Routes.settings_index_path(@conn, :index)}>
+                  <i class="ion-gear-a"></i>&nbsp;Settings
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href={Routes.settings_index_path(@conn, :index)}>
+                  <img class="user-pic" src={@conn.assigns.current_user.image} loading="lazy" />
+                  <%= @conn.assigns.current_user.username %>
+                </a>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <a class="nav-link" href={Routes.auth_index_path(@conn, :login)}>Sign in</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href={Routes.auth_index_path(@conn, :register)}>Sign up</a>
+              </li>
+            <% end %>
           </ul>
         </div>
       </nav>
