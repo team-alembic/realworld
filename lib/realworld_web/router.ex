@@ -22,8 +22,9 @@ defmodule RealworldWeb.Router do
 
     auth_routes_for Realworld.Accounts.User, to: AuthController
 
-    live "/register", AuthLive.Index, :register
     live "/login", AuthLive.Index, :login
+    live "/profile/:username", ProfileLive.Index, :profile
+    live "/register", AuthLive.Index, :register
     live "/", PageLive.Index, :index
   end
 

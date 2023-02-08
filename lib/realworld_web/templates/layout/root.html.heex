@@ -51,7 +51,16 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href={Routes.settings_index_path(@conn, :index)}>
+                <a
+                  class="nav-link"
+                  href={
+                    Routes.profile_index_path(
+                      @conn,
+                      :profile,
+                      @conn.assigns.current_user.username
+                    )
+                  }
+                >
                   <img class="user-pic" src={@conn.assigns.current_user.image} loading="lazy" />
                   <%= @conn.assigns.current_user.username %>
                 </a>
