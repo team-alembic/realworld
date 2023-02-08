@@ -3,15 +3,20 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1">
-          <img src="http://i.imgur.com/Qr71crq.jpg" class="user-img" />
-          <h4>Eric Simons</h4>
+          <img src={default_image(@profile_user.image)} class="user-img" />
+          <h4><%= @profile_user.username %></h4>
           <p>
-            Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda looks like Peeta from
-            the Hunger Games
+            <%= @profile_user.bio %>
           </p>
-          <button class="btn btn-sm btn-outline-secondary action-btn">
-            <i class="ion-plus-round"></i> &nbsp; Follow Eric Simons
-          </button>
+          <%= if @profile_user.id == @current_user_id do %>
+            <button class="btn btn-sm btn-outline-secondary action-btn" phx-click="edit-profile">
+              <i class="ion-gear-a"></i> &nbsp; Edit Profile Settings
+            </button>
+          <% else %>
+            <button class="btn btn-sm btn-outline-secondary action-btn">
+              <i class="ion-plus-round"></i> &nbsp; Follow <%= @profile_user.username %>
+            </button>
+          <% end %>
         </div>
       </div>
     </div>

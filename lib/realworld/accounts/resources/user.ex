@@ -8,8 +8,24 @@ defmodule Realworld.Accounts.User do
     repo Realworld.Repo
   end
 
+  code_interface do
+    define_for Realworld.Accounts
+
+    define :get_by_username, args: [:username]
+  end
+
   actions do
     defaults [:read, :update]
+
+    read :get_by_username do
+      argument :username, :string do
+        allow_nil? false
+      end
+
+      get? true
+
+      filter expr(username == ^arg(:username))
+    end
   end
 
   attributes do
