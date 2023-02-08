@@ -14,7 +14,7 @@ defmodule Realworld.Articles.Article do
   # end
 
   actions do
-    defaults [:create, :read, :update, :destroy]
+    defaults [:read, :update, :destroy]
 
     create :publish do
       primary? true
@@ -52,10 +52,15 @@ defmodule Realworld.Articles.Article do
     update_timestamp :updated_at
   end
 
+  identities do
+    identity :unique_slug, [:slug]
+  end
+
   relationships do
     belongs_to :user, Realworld.Accounts.User do
       api Realworld.Accounts
       writable? true
+      allow_nil? false
     end
 
     many_to_many :tag_list, Realworld.Articles.Tag do
