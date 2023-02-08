@@ -21,4 +21,8 @@ defmodule Realworld.Articles.Tag do
     create_timestamp :created_at
     update_timestamp :updated_at
   end
+
+  identities do
+    identity :unique_name, [:name]
+  end
 end
