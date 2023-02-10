@@ -12,16 +12,27 @@ defmodule Realworld.Articles.Article do
     policy action_type(:create) do
       authorize_if actor_present()
     end
+
+    policy action_type(:read) do
+      authorize_if always()
+    end
   end
 
-  # code_interface do
-  #   define_for Realworld.Articles
+  code_interface do
+    define_for Realworld.Articles
 
-  #   define :publish, args: [:title, :description, :body, :user]
-  # end
+    define :get_by_slug, action: :by_slug, args: [:slug]
+  end
 
   actions do
     defaults [:read, :update, :destroy]
+
+    read :by_slug do
+      get? true
+      argument :slug, :string, allow_nil?: false
+
+      filter expr(slug == ^arg(:slug))
+    end
 
     create :publish do
       primary? true
@@ -30,7 +41,7 @@ defmodule Realworld.Articles.Article do
       argument :tags, {:array, :map}, allow_nil?: true
       change manage_relationship(:tags, on_lookup: :relate, on_no_match: :create)
 
-      change relate_actor(:user, allow_nil?: false)
+      change relate_actor(:user)
 
       change Realworld.Articles.Changes.SlugifyTitle
     end
