@@ -1,10 +1,17 @@
 defmodule Realworld.Articles.Article do
   use Ash.Resource,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer]
 
   postgres do
     table "articles"
     repo Realworld.Repo
+  end
+
+  policies do
+    policy action_type(:create) do
+      authorize_if actor_present()
+    end
   end
 
   # code_interface do
@@ -20,13 +27,10 @@ defmodule Realworld.Articles.Article do
       primary? true
       accept [:title, :description, :body]
 
-      # ? confirm this approach
-      # ? should I be somehow reading the 'actor' here and using that as the user?
-      argument :user, :uuid, allow_nil?: false
-      change manage_relationship(:user, on_lookup: :relate, on_no_match: :error)
-
       argument :tags, {:array, :map}, allow_nil?: true
       change manage_relationship(:tags, on_lookup: :relate, on_no_match: :create)
+
+      change relate_actor(:user, allow_nil?: false)
 
       change Realworld.Articles.Changes.SlugifyTitle
     end
