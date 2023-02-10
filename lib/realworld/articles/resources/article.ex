@@ -19,19 +19,14 @@ defmodule Realworld.Articles.Article do
     create :publish do
       primary? true
       accept [:title, :description, :body]
-      argument :user, :uuid, allow_nil?: false
-      argument :tags, {:array, Realworld.Articles.Tag}, allow_nil?: true
-
-      change manage_relationship(:tags, on_lookup: :relate, on_no_match: :create)
 
       # ? confirm this approach
       # ? should I be somehow reading the 'actor' here and using that as the user?
+      argument :user, :uuid, allow_nil?: false
       change manage_relationship(:user, on_lookup: :relate, on_no_match: :error)
 
-      # change manage_relationship(:tags,
-      #          on_lookup: :relate,
-      #          on_no_match: {:create, :create, :create, [:article_id, :tag_id]}
-      #        )
+      argument :tags, {:array, :map}, allow_nil?: true
+      change manage_relationship(:tags, on_lookup: :relate, on_no_match: :create)
 
       change Realworld.Articles.Changes.SlugifyTitle
     end
