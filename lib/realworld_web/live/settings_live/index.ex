@@ -2,16 +2,11 @@ defmodule RealworldWeb.SettingsLive.Index do
   use RealworldWeb, :live_view
   alias AshPhoenix.Form
   alias Realworld.Accounts
-  alias Realworld.Accounts.User
 
   @impl true
-  def mount(_params, %{"user" => "user?id=" <> user_id}, socket) do
-    user =
-      User
-      |> Accounts.get!(user_id)
-
+  def mount(_params, _session, socket) do
     form =
-      user
+      socket.assigns.current_user
       |> Form.for_update(:update,
         api: Accounts,
         as: "user",

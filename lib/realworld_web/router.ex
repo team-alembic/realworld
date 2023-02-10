@@ -31,15 +31,16 @@ defmodule RealworldWeb.Router do
   end
 
   scope "/", RealworldWeb do
-    pipe_through([:browser, :require_authenticated_user])
+    pipe_through [:browser, :require_authenticated_user]
 
     sign_out_route AuthController
 
-    live_session :authenticated, on_mount: LiveSession, session: {LiveSession, :generate_session, []} do
+    live_session :authenticated,
+      on_mount: LiveSession,
+      session: {LiveSession, :generate_session, []} do
       live "/editor", EditorLive.Index, :index
+      live "/settings", SettingsLive.Index, :index
     end
-
-    live "/settings", SettingsLive.Index, :index
   end
 
   # Other scopes may use custom stacks.
