@@ -2,6 +2,8 @@ defmodule RealworldWeb.Router do
   use RealworldWeb, :router
   use AshAuthentication.Phoenix.Router
 
+  alias AshAuthentication.Phoenix.LiveSession
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -32,7 +34,11 @@ defmodule RealworldWeb.Router do
     pipe_through([:browser, :require_authenticated_user])
 
     sign_out_route AuthController
-    live "/editor", EditorLive.Index, :index
+
+    live_session :authenticated, on_mount: LiveSession, session: {LiveSession, :generate_session, []} do
+      live "/editor", EditorLive.Index, :index
+    end
+
     live "/settings", SettingsLive.Index, :index
   end
 
