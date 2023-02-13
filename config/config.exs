@@ -48,7 +48,7 @@ config :phoenix, :json_library, Jason
 # For backwards compatibility, the following configuration is required. Don’t worry about it for now, just know that it needs to be set until the behavior is deprecated in the next major release.
 config :ash, :use_all_identities_in_manage_relationship?, false
 
-config :realworld, :ash_apis, [Realworld.Accounts, Realworld.Articles]
+config :realworld, :ash_apis, [Realworld.Accounts, Realworld.Articles, Realworld.Profiles]
 
 config :realworld, ecto_repos: [Realworld.Repo]
 

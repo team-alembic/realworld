@@ -101,6 +101,7 @@ defmodule RealworldWeb do
       import RealworldWeb.ErrorHelpers
       import RealworldWeb.Gettext
       alias RealworldWeb.Router.Helpers, as: Routes
+      import RealworldWeb.LiveHelpers
     end
   end
 
