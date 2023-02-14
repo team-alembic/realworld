@@ -2,7 +2,19 @@
   <div class="container page">
     <div class="row">
       <div class="col-md-10 offset-md-1 col-xs-12">
+        <%= if @form.submit_errors do %>
+          <div class="alert alert-danger">
+            <h4 class="alert-heading">Oops!</h4>
+            <p>Something went wrong. Please check the form and try again.</p>
+            <ul class="error-messages">
+              <%= for {field, {message, _}} <- @form.submit_errors do %>
+                <li><%= "#{field} #{message}" %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
         <.form :let={f} for={@form} phx-change="validate" phx-submit="save">
+          <%= hidden_inputs_for(f) %>
           <fieldset>
             <fieldset class="form-group">
               <%= text_input(f, :title,
@@ -27,8 +39,29 @@
               <%= error_tag(f, :body) %>
             </fieldset>
             <fieldset class="form-group">
-              <input type="text" class="form-control" placeholder="Enter tags" />
-              <div class="tag-list"></div>
+              <input
+                id="tag-input"
+                type="text"
+                class="form-control"
+                placeholder="Enter tags"
+                phx-update="ignore"
+                phx-hook="TagInput"
+              />
+              <div class="tag-list">
+                <%= for tag_form <- inputs_for(f, :tags) do %>
+                  <%= hidden_inputs_for(tag_form) %>
+                  <%= hidden_input(tag_form, :name) %>
+                  <span class="tag-default tag-pill">
+                    <i
+                      class="ion-close-round"
+                      phx-click="remove_tag"
+                      phx-value-path={tag_form.name}
+                    >
+                    </i>
+                    <%= " #{AshPhoenix.Form.value(tag_form, :name)} " %>
+                  </span>
+                <% end %>
+              </div>
             </fieldset>
             <%= submit("Publish Article", class: "btn btn-lg pull-xs-right btn-primary") %>
           </fieldset>

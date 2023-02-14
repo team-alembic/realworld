@@ -7,15 +7,17 @@ defmodule RealworldWeb.EditorLive.Index do
     form =
       AshPhoenix.Form.for_create(Article, :publish,
         api: Realworld.Articles,
-        actor: socket.assigns.current_user
+        actor: socket.assigns.current_user,
+        forms: [
+          auto?: true
+        ]
       )
 
     {:ok, assign(socket, form: form)}
   end
 
   def handle_event("validate", %{"form" => params}, socket) do
-    form = AshPhoenix.Form.validate(socket.assigns.form, params)
-
+    form = AshPhoenix.Form.validate(socket.assigns.form, params, errors: false)
     {:noreply, assign(socket, form: form)}
   end
 
@@ -28,7 +30,26 @@ defmodule RealworldWeb.EditorLive.Index do
 
       {:error, form} ->
         IO.inspect(form)
-        {:noreply, assign(socket, :form, form)}
+        {:noreply, assign(socket, form: form)}
     end
+  end
+
+  def handle_event("add_tag", %{"tag" => tag}, socket) do
+    tag = String.trim(tag)
+    tags = socket.assigns.form.forms[:tags] || []
+
+    case Enum.any?(tags, fn t -> AshPhoenix.Form.value(t, :name) == tag end) do
+      true ->
+        {:reply, %{ tag_added: false }, socket}
+
+      false ->
+        form = AshPhoenix.Form.add_form(socket.assigns.form, "form[tags]", params: %{name: tag})
+        {:reply, %{ tag_added: true }, assign(socket, form: form)}
+    end
+  end
+
+  def handle_event("remove_tag", %{"path" => path}, socket) do
+    form = AshPhoenix.Form.remove_form(socket.assigns.form, path)
+    {:noreply, assign(socket, form: form)}
   end
 end
