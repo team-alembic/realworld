@@ -27,6 +27,7 @@ defmodule RealworldWeb.Router do
     live "/login", AuthLive.Index, :login
     live "/profile/:username", ProfileLive.Index, :profile
     live "/register", AuthLive.Index, :register
+    live "/article/:slug", ArticleLive.Index, :index
     live "/", PageLive.Index, :index
   end
 
