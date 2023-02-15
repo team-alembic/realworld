@@ -53,8 +53,15 @@ defmodule RealworldWeb.ArticleLive.Index do
 
   defp apply_action(socket, :index, %{"slug" => slug}) do
     case get_article_by_slug(slug) do
-      {:ok, article} -> assign(socket, article: article)
-      _ -> redirect(socket, to: Routes.page_index_path(socket, :index))
+      {:ok, article} ->
+        socket
+        |> assign(article: article)
+        |> assign(
+          author_profile_url: Routes.profile_index_path(socket, :profile, article.user.username)
+        )
+
+      _ ->
+        redirect(socket, to: Routes.page_index_path(socket, :index))
     end
   end
 

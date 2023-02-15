@@ -4,12 +4,9 @@
       <h1><%= @article.title %></h1>
 
       <div class="article-meta">
-        <a href=""><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
+        <a href={@author_profile_url}><img src={@article.user.image} /></a>
         <div class="info">
-          <a
-            href={Routes.profile_index_path(@socket, :profile, @article.user.username)}
-            class="author"
-          >
+          <a href={@author_profile_url} class="author">
             <%= @article.user.username %>
           </a>
           <span class="date">
@@ -18,7 +15,7 @@
         </div>
         <button class="btn btn-sm btn-outline-secondary">
           <i class="ion-plus-round"></i>
-          &nbsp; Follow Eric Simons <span class="counter">(10)</span>
+          &nbsp; Follow <%= @article.user.username %> <span class="counter">(10)</span>
         </button>
         &nbsp;&nbsp;
         <button class="btn btn-sm btn-outline-primary">
@@ -46,19 +43,16 @@
 
     <div class="article-actions">
       <div class="article-meta">
-        <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
+        <a href={@author_profile_url}><img src={@article.user.image} /></a>
         <div class="info">
-          <a
-            href={Routes.profile_index_path(@socket, :profile, @article.user.username)}
-            class="author"
-          >
+          <a href={@author_profile_url} class="author">
             <%= @article.user.username %>
           </a>
           <span class="date"><%= Calendar.strftime(@article.created_at, "%B %d, %Y") %></span>
         </div>
 
         <button class="btn btn-sm btn-outline-secondary">
-          <i class="ion-plus-round"></i> &nbsp; Follow Eric Simons
+          <i class="ion-plus-round"></i> &nbsp; Follow <%= @article.user.username %>
         </button>
         &nbsp;
         <button class="btn btn-sm btn-outline-primary">
