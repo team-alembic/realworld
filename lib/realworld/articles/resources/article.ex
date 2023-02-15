@@ -30,6 +30,8 @@ defmodule Realworld.Articles.Article do
     define_for Realworld.Articles
 
     define :get_by_slug, action: :by_slug, args: [:slug]
+
+    define :list_articles, action: :list_articles, args: [:tag]
   end
 
   actions do
@@ -40,6 +42,15 @@ defmodule Realworld.Articles.Article do
       argument :slug, :string, allow_nil?: false
 
       filter expr(slug == ^arg(:slug))
+    end
+
+    read :list_articles do
+      argument :tag, :string, allow_nil?: true
+
+      pagination do
+        default_limit 20
+        offset? true
+      end
     end
 
     create :publish do
