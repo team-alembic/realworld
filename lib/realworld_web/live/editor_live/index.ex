@@ -3,6 +3,21 @@ defmodule RealworldWeb.EditorLive.Index do
 
   alias Realworld.Articles.Article
 
+  def mount(%{"slug" => slug}, _session, socket) do
+    {:ok, article} = Article.get_by_slug(slug) |> Realworld.Articles.load(:tags)
+
+    form =
+      AshPhoenix.Form.for_update(article, :update,
+        api: Realworld.Articles,
+        actor: socket.assigns.current_user,
+        forms: [
+          auto?: true
+        ]
+      )
+
+    {:ok, assign(socket, form: form)}
+  end
+
   def mount(_params, _session, socket) do
     form =
       AshPhoenix.Form.for_create(Article, :publish,

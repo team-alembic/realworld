@@ -9,12 +9,20 @@ defmodule Realworld.Articles.Article do
   end
 
   policies do
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
     policy action_type(:create) do
       authorize_if actor_present()
     end
 
-    policy action_type(:read) do
-      authorize_if always()
+    policy action_type(:update) do
+      authorize_if relates_to_actor_via(:user)
+    end
+
+    policy action_type(:destroy) do
+      authorize_if relates_to_actor_via(:user)
     end
   end
 
@@ -25,7 +33,7 @@ defmodule Realworld.Articles.Article do
   end
 
   actions do
-    defaults [:read, :update, :destroy]
+    defaults [:read, :destroy]
 
     read :by_slug do
       get? true
@@ -42,6 +50,16 @@ defmodule Realworld.Articles.Article do
       change manage_relationship(:tags, on_lookup: :relate, on_no_match: :create)
 
       change relate_actor(:user)
+
+      change Realworld.Articles.Changes.SlugifyTitle
+    end
+
+    update :update do
+      primary? true
+      accept [:title, :description, :body]
+
+      argument :tags, {:array, :map}, allow_nil?: true
+      change manage_relationship(:tags, on_lookup: :relate, on_no_match: :create, on_missing: :unrelate)
 
       change Realworld.Articles.Changes.SlugifyTitle
     end

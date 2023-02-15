@@ -38,7 +38,8 @@ defmodule RealworldWeb.Router do
     live_session :authenticated,
       on_mount: LiveSession,
       session: {LiveSession, :generate_session, []} do
-      live "/editor", EditorLive.Index, :index
+      live "/editor", EditorLive.Index, :new
+      live "/editor/:slug", EditorLive.Index, :edit
       live "/settings", SettingsLive.Index, :index
     end
   end
