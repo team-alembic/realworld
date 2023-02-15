@@ -4,18 +4,22 @@ defmodule RealworldWeb.EditorLive.Index do
   alias Realworld.Articles.Article
 
   def mount(%{"slug" => slug}, _session, socket) do
-    {:ok, article} = Article.get_by_slug(slug) |> Realworld.Articles.load(:tags)
+    case get_article_by_slug(slug) do
+      {:ok, article} ->
+        form =
+          AshPhoenix.Form.for_update(article, :update,
+            api: Realworld.Articles,
+            actor: socket.assigns.current_user,
+            forms: [
+              auto?: true
+            ]
+          )
 
-    form =
-      AshPhoenix.Form.for_update(article, :update,
-        api: Realworld.Articles,
-        actor: socket.assigns.current_user,
-        forms: [
-          auto?: true
-        ]
-      )
+        {:ok, assign(socket, form: form)}
 
-    {:ok, assign(socket, form: form)}
+      _ ->
+        {:ok, redirect(socket, to: Routes.page_index_path(socket, :index))}
+    end
   end
 
   def mount(_params, _session, socket) do
@@ -55,16 +59,20 @@ defmodule RealworldWeb.EditorLive.Index do
 
     case Enum.any?(tags, fn t -> AshPhoenix.Form.value(t, :name) == tag end) do
       true ->
-        {:reply, %{ tag_added: false }, socket}
+        {:reply, %{tag_added: false}, socket}
 
       false ->
         form = AshPhoenix.Form.add_form(socket.assigns.form, "form[tags]", params: %{name: tag})
-        {:reply, %{ tag_added: true }, assign(socket, form: form)}
+        {:reply, %{tag_added: true}, assign(socket, form: form)}
     end
   end
 
   def handle_event("remove_tag", %{"path" => path}, socket) do
     form = AshPhoenix.Form.remove_form(socket.assigns.form, path)
     {:noreply, assign(socket, form: form)}
+  end
+
+  defp get_article_by_slug(slug) do
+    slug |> Article.get_by_slug() |> Realworld.Articles.load(:tags)
   end
 end
