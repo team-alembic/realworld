@@ -3,38 +3,17 @@ defmodule RealworldWeb.EditorLive.Index do
 
   alias Realworld.Articles.Article
 
-  def mount(%{"slug" => slug}, _session, socket) do
-    case get_article_by_slug(slug) do
-      {:ok, article} ->
-        form =
-          AshPhoenix.Form.for_update(article, :update,
-            api: Realworld.Articles,
-            actor: socket.assigns.current_user,
-            forms: [
-              auto?: true
-            ]
-          )
-
-        {:ok, assign(socket, form: form)}
-
-      _ ->
-        {:ok, redirect(socket, to: Routes.page_index_path(socket, :index))}
-    end
-  end
-
+  @impl true
   def mount(_params, _session, socket) do
-    form =
-      AshPhoenix.Form.for_create(Article, :publish,
-        api: Realworld.Articles,
-        actor: socket.assigns.current_user,
-        forms: [
-          auto?: true
-        ]
-      )
-
-    {:ok, assign(socket, form: form)}
+    {:ok, socket}
   end
 
+  @impl true
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  @impl true
   def handle_event("validate", %{"form" => params}, socket) do
     form = AshPhoenix.Form.validate(socket.assigns.form, params, errors: false)
     {:noreply, assign(socket, form: form)}
@@ -70,6 +49,48 @@ defmodule RealworldWeb.EditorLive.Index do
   def handle_event("remove_tag", %{"path" => path}, socket) do
     form = AshPhoenix.Form.remove_form(socket.assigns.form, path)
     {:noreply, assign(socket, form: form)}
+  end
+
+  defp apply_action(socket, :new, _) do
+    form =
+      AshPhoenix.Form.for_create(Article, :publish,
+        api: Realworld.Articles,
+        actor: socket.assigns.current_user,
+        forms: [
+          auto?: true
+        ]
+      )
+
+    assign(socket, form: form)
+  end
+
+  defp apply_action(socket, :edit, %{"slug" => slug}) do
+    case get_article_by_slug(slug) do
+      {:ok, article} ->
+        form =
+          AshPhoenix.Form.for_update(article, :update,
+            api: Realworld.Articles,
+            actor: socket.assigns.current_user,
+            forms: [
+              auto?: true
+            ]
+          )
+
+        assign(socket, form: form)
+
+      _ ->
+        redirect(socket, to: Routes.page_index_path(socket, :index))
+    end
+
+    # case Accounts.User.get_by_username(username) do
+    #   {:ok, user} ->
+    #     socket
+    #     |> assign(:profile_user, user)
+    #     |> assign(:following, is_following?(socket.assigns.current_user, user))
+
+    #   _ ->
+    #     redirect(socket, to: Routes.page_index_path(socket, :index))
+    # end
   end
 
   defp get_article_by_slug(slug) do
