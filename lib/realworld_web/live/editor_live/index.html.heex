@@ -31,12 +31,12 @@
               <%= error_tag(f, :description) %>
             </fieldset>
             <fieldset class="form-group">
-              <%= textarea(f, :body,
+              <%= textarea(f, :body_raw,
                 class: "form-control",
                 rows: 8,
                 placeholder: "Write your article (in markdown)"
               ) %>
-              <%= error_tag(f, :body) %>
+              <%= error_tag(f, :body_raw) %>
             </fieldset>
             <fieldset class="form-group">
               <input

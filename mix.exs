@@ -50,7 +50,8 @@ defmodule Realworld.MixProject do
       {:elixir_sense, github: "elixir-lsp/elixir_sense", only: [:dev, :test]},
       {:ash_authentication, "~> 3.7.6"},
       {:ash_authentication_phoenix, "~> 1.4.6"},
-      {:slugify, "~> 1.3.1"}
+      {:slugify, "~> 1.3.1"},
+      {:earmark, "~> 1.4.36"}
     ]
   end
 

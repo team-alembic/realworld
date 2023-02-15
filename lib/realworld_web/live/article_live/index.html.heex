@@ -12,7 +12,9 @@
           >
             <%= @article.user.username %>
           </a>
-          <span class="date">January 20th</span>
+          <span class="date">
+            <%= Calendar.strftime(@article.created_at, "%B %d, %Y") %>
+          </span>
         </div>
         <button class="btn btn-sm btn-outline-secondary">
           <i class="ion-plus-round"></i>
@@ -29,7 +31,7 @@
   <div class="container page">
     <div class="row article-content">
       <div class="col-md-12">
-        <article><%= @article.body %></article>
+        <article><%= raw(@article.body) %></article>
         <ul class="tag-list">
           <%= for tag <- @article.tags do %>
             <li class="tag-default tag-pill tag-outline">
@@ -46,8 +48,13 @@
       <div class="article-meta">
         <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
         <div class="info">
-          <a href="" class="author">Eric Simons</a>
-          <span class="date">January 20th</span>
+          <a
+            href={Routes.profile_index_path(@socket, :profile, @article.user.username)}
+            class="author"
+          >
+            <%= @article.user.username %>
+          </a>
+          <span class="date"><%= Calendar.strftime(@article.created_at, "%B %d, %Y") %></span>
         </div>
 
         <button class="btn btn-sm btn-outline-secondary">

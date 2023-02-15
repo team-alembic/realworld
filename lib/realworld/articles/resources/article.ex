@@ -55,7 +55,7 @@ defmodule Realworld.Articles.Article do
 
     create :publish do
       primary? true
-      accept [:title, :description, :body]
+      accept [:title, :description, :body_raw]
 
       argument :tags, {:array, :map}, allow_nil?: true
       change manage_relationship(:tags, on_lookup: :relate, on_no_match: :create)
@@ -63,16 +63,18 @@ defmodule Realworld.Articles.Article do
       change relate_actor(:user)
 
       change Realworld.Articles.Changes.SlugifyTitle
+      change Realworld.Articles.Changes.RenderMarkdown
     end
 
     update :update do
       primary? true
-      accept [:title, :description, :body]
+      accept [:title, :description, :body_raw]
 
       argument :tags, {:array, :map}, allow_nil?: true
       change manage_relationship(:tags, on_lookup: :relate, on_no_match: :create, on_missing: :unrelate)
 
       change Realworld.Articles.Changes.SlugifyTitle
+      change Realworld.Articles.Changes.RenderMarkdown
     end
   end
 
@@ -89,6 +91,11 @@ defmodule Realworld.Articles.Article do
 
     attribute :description, :string do
       allow_nil? false
+    end
+
+    attribute :body_raw, :string do
+      allow_nil? false
+      default ""
     end
 
     attribute :body, :string do
