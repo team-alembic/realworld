@@ -5,7 +5,7 @@ defmodule RealworldWeb.ProfileLive.Index do
 
   @impl true
   def mount(_params, session, socket) do
-    {:ok, assign_defaults(session, socket)}
+    {:ok, socket}
   end
 
   @impl true

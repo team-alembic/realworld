@@ -26,10 +26,10 @@ defmodule RealworldWeb.Router do
 
     # TODO: should we move these into the live session?
     live "/login", AuthLive.Index, :login
-    live "/profile/:username", ProfileLive.Index, :profile
     live "/register", AuthLive.Index, :register
 
     ash_authentication_live_session :maybe_authenticated do
+      live "/profile/:username", ProfileLive.Index, :profile
       live "/article/:slug", ArticleLive.Index, :index
       live "/", PageLive.Index, :index
     end
