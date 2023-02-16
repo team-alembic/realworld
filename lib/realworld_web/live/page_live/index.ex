@@ -12,8 +12,25 @@ defmodule RealworldWeb.PageLive.Index do
       |> assign(:filter_author, nil)
       |> assign(:filter_favourited, nil)
       |> assign(:articles, [])
+      |> assign(:pages, 0)
+      |> assign(:active_page, 1)
 
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_params(%{"page" => page} = params, _url, socket) do
+    {active_page, _} = Integer.parse(page)
+
+    socket =
+      socket
+      |> assign(:active_page, active_page)
+      |> assign(
+        :page_offset,
+        (active_page - 1) * socket.assigns.page_limit
+      )
+
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
   @impl true
@@ -27,7 +44,9 @@ defmodule RealworldWeb.PageLive.Index do
            page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
          ) do
       {:ok, page} ->
-        socket |> assign(:articles, page.results)
+        socket
+        |> assign(:articles, page.results)
+        |> assign(:pages, ceil(page.count / socket.assigns.page_limit))
 
       _ ->
         put_flash(socket, :error, "Unable to fetch articles. Please try again later.")

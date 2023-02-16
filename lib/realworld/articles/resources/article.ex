@@ -50,6 +50,7 @@ defmodule Realworld.Articles.Article do
       pagination do
         default_limit 20
         offset? true
+        countable :by_default
       end
 
       prepare Realworld.Articles.Article.Preparations.FilterSortFeed

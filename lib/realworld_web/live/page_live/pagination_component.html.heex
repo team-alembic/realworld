@@ -1,0 +1,9 @@
+<nav>
+  <ul class="pagination">
+    <%= for page <- 1..@pages do %>
+      <li class={"page-item #{active_class(page, @active_page)}"}>
+        <.link class="page-link" patch={"?page=#{page}"}><%= page %></.link>
+      </li>
+    <% end %>
+  </ul>
+</nav>

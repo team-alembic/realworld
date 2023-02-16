@@ -49,6 +49,15 @@
           </div>
         </div>
       </div>
+
+      <%= if @pages > 1 do %>
+        <.live_component
+          module={RealworldWeb.PageLive.PaginationComponent}
+          id="pagination-component"
+          pages={@pages}
+          active_page={@active_page}
+        />
+      <% end %>
     </div>
   </div>
 </div>
