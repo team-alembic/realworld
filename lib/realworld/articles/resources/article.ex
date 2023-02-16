@@ -31,7 +31,7 @@ defmodule Realworld.Articles.Article do
 
     define :get_by_slug, action: :by_slug, args: [:slug]
 
-    define :list_articles, action: :list_articles, args: [:tag]
+    define :list_articles, action: :list_articles, args: [{:optional, :filter}]
   end
 
   actions do
@@ -45,12 +45,14 @@ defmodule Realworld.Articles.Article do
     end
 
     read :list_articles do
-      argument :tag, :string, allow_nil?: true
+      argument :filter, :map, allow_nil?: true
 
       pagination do
         default_limit 20
         offset? true
       end
+
+      prepare Realworld.Articles.Article.Preparations.FilterSortFeed
     end
 
     create :publish do
@@ -71,7 +73,12 @@ defmodule Realworld.Articles.Article do
       accept [:title, :description, :body_raw]
 
       argument :tags, {:array, :map}, allow_nil?: true
-      change manage_relationship(:tags, on_lookup: :relate, on_no_match: :create, on_missing: :unrelate)
+
+      change manage_relationship(:tags,
+               on_lookup: :relate,
+               on_no_match: :create,
+               on_missing: :unrelate
+             )
 
       change Realworld.Articles.Changes.SlugifyTitle
       change Realworld.Articles.Changes.RenderMarkdown
