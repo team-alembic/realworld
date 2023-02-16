@@ -8,6 +8,8 @@ defmodule Realworld.Articles.Article.Preparations.FilterSortFeed do
     |> filter_by_author()
     |> filter_by_favourited()
     |> Ash.Query.sort([created_at: :desc], prepend?: true)
+    |> Ash.Query.load(:user)
+    |> Ash.Query.load(:tags)
   end
 
   defp filter_by_tag(query) do

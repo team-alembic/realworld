@@ -1,0 +1,23 @@
+<div class="article-preview">
+  <div class="article-meta">
+    <a href={"/profile/#{@article.user.username}"}>
+      <img src="http://i.imgur.com/N4VcUeJ.jpg" />
+    </a>
+    <div class="info">
+      <a href={"/profile/#{@article.user.username}"} class="author">
+        <%= @article.user.username %>
+      </a>
+      <span class="date"><%= format_datetime(@article.created_at) %></span>
+    </div>
+    <button class="btn btn-outline-primary btn-sm pull-xs-right">
+      <i class="ion-heart"></i> 32
+    </button>
+  </div>
+  <a href={"/article/#{@article.slug}"} class="preview-link">
+    <h1><%= @article.title %></h1>
+    <p><%= @article.description %></p>
+    <span phx-click="read-more" phx-value-slug={@article.slug} phx-target={@myself}>
+      Read more...
+    </span>
+  </a>
+</div>

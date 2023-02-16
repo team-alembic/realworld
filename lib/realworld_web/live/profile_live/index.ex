@@ -4,7 +4,7 @@ defmodule RealworldWeb.ProfileLive.Index do
   alias Realworld.Profiles
 
   @impl true
-  def mount(_params, session, socket) do
+  def mount(_params, _session, socket) do
     {:ok, socket}
   end
 
