@@ -2,26 +2,12 @@
   <div class="banner">
     <div class="container">
       <h1><%= @article.title %></h1>
-
-      <div class="article-meta">
-        <a href={@author_profile_url}><img src={@article.user.image} /></a>
-        <div class="info">
-          <a href={@author_profile_url} class="author">
-            <%= @article.user.username %>
-          </a>
-          <span class="date">
-            <%= Calendar.strftime(@article.created_at, "%B %d, %Y") %>
-          </span>
-        </div>
-        <button class="btn btn-sm btn-outline-secondary">
-          <i class="ion-plus-round"></i>
-          &nbsp; Follow <%= @article.user.username %> <span class="counter">(10)</span>
-        </button>
-        &nbsp;&nbsp;
-        <button class="btn btn-sm btn-outline-primary">
-          <i class="ion-heart"></i> &nbsp; Favorite Post <span class="counter">(29)</span>
-        </button>
-      </div>
+      <.actions
+        article={@article}
+        edit_path={Routes.editor_index_path(@socket, :edit, @article.slug)}
+        profile_path={Routes.profile_index_path(@socket, :profile, @article.user.username)}
+        is_owner={@is_owner}
+      />
     </div>
   </div>
 
@@ -42,23 +28,12 @@
     <hr />
 
     <div class="article-actions">
-      <div class="article-meta">
-        <a href={@author_profile_url}><img src={@article.user.image} /></a>
-        <div class="info">
-          <a href={@author_profile_url} class="author">
-            <%= @article.user.username %>
-          </a>
-          <span class="date"><%= Calendar.strftime(@article.created_at, "%B %d, %Y") %></span>
-        </div>
-
-        <button class="btn btn-sm btn-outline-secondary">
-          <i class="ion-plus-round"></i> &nbsp; Follow <%= @article.user.username %>
-        </button>
-        &nbsp;
-        <button class="btn btn-sm btn-outline-primary">
-          <i class="ion-heart"></i> &nbsp; Favorite Post <span class="counter">(29)</span>
-        </button>
-      </div>
+      <.actions
+        article={@article}
+        edit_path={Routes.editor_index_path(@socket, :edit, @article.slug)}
+        profile_path={Routes.profile_index_path(@socket, :profile, @article.user.username)}
+        is_owner={@is_owner}
+      />
     </div>
 
     <div class="row">

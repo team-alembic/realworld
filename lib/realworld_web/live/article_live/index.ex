@@ -1,10 +1,17 @@
 defmodule RealworldWeb.ArticleLive.Index do
   use RealworldWeb, :live_view
 
+  import RealworldWeb.ArticleLive.Actions, only: [actions: 1]
+
+  alias Realworld.Articles
   alias Realworld.Articles.Article
 
   @impl true
   def mount(_params, _session, socket) do
+    if socket.assigns[:current_user] do
+      Ash.set_actor(socket.assigns[:current_user])
+    end
+
     {:ok, socket}
   end
 
@@ -54,10 +61,10 @@ defmodule RealworldWeb.ArticleLive.Index do
   defp apply_action(socket, :index, %{"slug" => slug}) do
     case get_article_by_slug(slug) do
       {:ok, article} ->
-        socket
-        |> assign(article: article)
-        |> assign(
-          author_profile_url: Routes.profile_index_path(socket, :profile, article.user.username)
+        assign(socket,
+          article: article,
+          author_profile_url: Routes.profile_index_path(socket, :profile, article.user.username),
+          is_owner: is_owner?(socket.assigns[:current_user], article.user)
         )
 
       _ ->
@@ -65,18 +72,27 @@ defmodule RealworldWeb.ArticleLive.Index do
     end
   end
 
-  #   # case Accounts.User.get_by_username(username) do
-  #   #   {:ok, user} ->
-  #   #     socket
-  #   #     |> assign(:profile_user, user)
-  #   #     |> assign(:following, is_following?(socket.assigns.current_user, user))
+  @impl true
+  def handle_event("delete", _params, socket) do
+    socket.assigns.article
+    |> Ash.Changeset.for_destroy(:destroy)
+    |> Articles.destroy()
 
-  #   #   _ ->
-  #   #     redirect(socket, to: Routes.page_index_path(socket, :index))
-  #   # end
-  # end
+    {:noreply, redirect(socket, to: Routes.page_index_path(socket, :index))}
+  end
+
+  def handle_event("favorite", _params, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_event("follow", _params, socket) do
+    {:noreply, socket}
+  end
 
   defp get_article_by_slug(slug) do
     slug |> Article.get_by_slug() |> Realworld.Articles.load([:user, :tags])
   end
+
+  defp is_owner?(nil, _), do: false
+  defp is_owner?(current_user, user), do: current_user.id == user.id
 end
