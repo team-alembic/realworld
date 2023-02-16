@@ -3,6 +3,7 @@ defmodule RealworldWeb.ArticleLive.Actions do
 
   attr :article, Realworld.Articles.Article, required: true
   attr :is_owner, :boolean, required: true
+  attr :is_following, :boolean, required: true
   attr :edit_path, :string, required: true
   attr :profile_path, :string, required: true
 
@@ -25,16 +26,20 @@ defmodule RealworldWeb.ArticleLive.Actions do
         >
           <i class="ion-edit"></i> Edit Article
         </a>
-        <button class="btn btn-outline-danger btn-sm" phx-click="delete">
+        <button class="btn btn-outline-danger btn-sm" phx-click="delete-article">
           <i class="ion-trash-a"></i> Delete Article
         </button>
       </span>
       <span :if={!@is_owner}>
-        <button class="btn btn-sm btn-outline-secondary" phx-click="follow">
+        <button :if={!@is_following} class="btn btn-sm btn-outline-secondary" phx-click="follow-profile">
           <i class="ion-plus-round"></i>
-          &nbsp; Follow <%= @article.user.username %> <span class="counter">(10)</span>
+          &nbsp; Follow <%= @article.user.username %>
         </button>
-        <button class="btn btn-sm btn-outline-primary" phx-click="favorite">
+        <button :if={@is_following} class="btn btn-sm btn-outline-secondary" phx-click="unfollow-profile">
+          <i class="ion-plus-round"></i>
+          &nbsp; Unfollow <%= @article.user.username %>
+        </button>
+        <button class="btn btn-sm btn-outline-primary" phx-click="favorite-article">
           <i class="ion-heart"></i> &nbsp; Favorite Post <span class="counter">(29)</span>
         </button>
       </span>
