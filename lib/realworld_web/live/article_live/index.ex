@@ -4,8 +4,8 @@ defmodule RealworldWeb.ArticleLive.Index do
   import RealworldWeb.ArticleLive.Actions, only: [actions: 1]
 
   alias Realworld.Articles
-  alias Realworld.Articles.Article
   alias Realworld.Profiles
+  alias Realworld.Articles.{Article, Favorite}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -28,6 +28,7 @@ defmodule RealworldWeb.ArticleLive.Index do
         |> assign(:article, article)
         |> assign(:is_owner, is_owner?(socket.assigns[:current_user], article.user))
         |> assign(:following, follows(socket.assigns[:current_user], article.user))
+        |> assign(:favorite, favorited(article))
 
       _ ->
         redirect(socket, to: Routes.page_index_path(socket, :index))
@@ -43,8 +44,54 @@ defmodule RealworldWeb.ArticleLive.Index do
     {:noreply, redirect(socket, to: Routes.page_index_path(socket, :index))}
   end
 
-  def handle_event("favorite-article", _params, socket) do
-    {:noreply, socket}
+  def handle_event(
+        "favorite-article",
+        _,
+        %{assigns: %{current_user: current_user, article: article}} = socket
+      ) do
+    case Favorite.favorite(article) do
+      {:ok, favorite} ->
+        article = Map.put(article, :favorites_count, article.favorites_count + 1)
+
+        socket =
+          socket
+          |> assign(:article, article)
+          |> assign(:favorite, favorite)
+
+        {:noreply, socket}
+
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event(
+        "unfavorite-article",
+        _,
+        %{assigns: %{current_user: current_user, article: article, favorite: favorite}} = socket
+      ) do
+    case Articles.destroy(favorite) do
+      :ok ->
+        article = Map.put(article, :favorites_count, article.favorites_count - 1)
+
+        socket =
+          socket
+          |> assign(:article, article)
+          |> assign(:favorite, nil)
+
+        {:noreply, socket}
+
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event("favorite-article", _, socket) do
+    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+  end
+
+  def handle_event("unfavorite-article", _, socket) do
+    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
   end
 
   def handle_event(
@@ -84,21 +131,30 @@ defmodule RealworldWeb.ArticleLive.Index do
   end
 
   defp get_article_by_slug(slug) do
-    slug |> Article.get_by_slug() |> Realworld.Articles.load([:user, :tags])
+    slug
+    |> Article.get_by_slug()
+    |> Realworld.Articles.load([:user, :tags, :favorites_count])
   end
 
   defp is_owner?(nil, _), do: false
+
   defp is_owner?(current_user, user), do: current_user.id == user.id
 
   defp follows(_current_user = nil, _user), do: nil
 
   defp follows(current_user, user) do
     case Profiles.Follow.following?(current_user.id, user.id) do
-      {:ok, follow} ->
-        follow
+      {:ok, follow} -> follow
+      _ -> nil
+    end
+  end
 
-      _ ->
-        nil
+  def favorited(nil, _), do: nil
+
+  def favorited(article) do
+    case Favorite.favorited(article.id) do
+      {:ok, favorite} -> favorite
+      _ -> nil
     end
   end
 end

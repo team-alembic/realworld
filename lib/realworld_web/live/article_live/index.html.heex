@@ -8,6 +8,7 @@
         profile_path={Routes.profile_index_path(@socket, :profile, @article.user.username)}
         is_owner={@is_owner}
         is_following={!is_nil(@following)}
+        is_favorited={!is_nil(@favorite)}
       />
     </div>
   </div>
@@ -35,6 +36,7 @@
         profile_path={Routes.profile_index_path(@socket, :profile, @article.user.username)}
         is_owner={@is_owner}
         is_following={!is_nil(@following)}
+        is_favorited={!is_nil(@favorite)}
       />
     </div>
 

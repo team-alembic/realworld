@@ -117,6 +117,15 @@ defmodule Realworld.Articles.Article do
     identity :unique_slug, [:slug]
   end
 
+  aggregates do
+    count :favorites_count, :favorites
+  end
+
+  # calculations do
+  #   calculate :is_favorited, :boolean, expr(exists(favorites, id == ^actor(:id)))
+  #   # calculate :is_favorited, :string, expr(^actor(:id))
+  # end
+
   relationships do
     belongs_to :user, Realworld.Accounts.User do
       api Realworld.Accounts
@@ -128,6 +137,13 @@ defmodule Realworld.Articles.Article do
       through Realworld.Articles.ArticleTag
       source_attribute_on_join_resource :article_id
       destination_attribute_on_join_resource :tag_id
+    end
+
+    many_to_many :favorites, Realworld.Accounts.User do
+      api Realworld.Accounts
+      through Realworld.Articles.Favorite
+      source_attribute_on_join_resource :article_id
+      destination_attribute_on_join_resource :user_id
     end
   end
 end

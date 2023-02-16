@@ -36,9 +36,20 @@ defmodule Realworld.Articles.Favorite do
 
     define :favorite, action: :add_favorite, args: [:article]
     define :unfavorite, action: :remove_favorite, args: [:article]
+    define :favorited, action: :favorited, args: [:article_id]
   end
 
   actions do
+    defaults [:read]
+
+    read :favorited do
+      get? true
+
+      argument :article_id, :uuid, allow_nil?: false
+
+      filter expr(user_id == ^actor(:id) and article_id == ^arg(:article_id))
+    end
+
     create :add_favorite do
       primary? true
 

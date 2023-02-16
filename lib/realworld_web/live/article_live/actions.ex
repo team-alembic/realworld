@@ -4,6 +4,7 @@ defmodule RealworldWeb.ArticleLive.Actions do
   attr :article, Realworld.Articles.Article, required: true
   attr :is_owner, :boolean, required: true
   attr :is_following, :boolean, required: true
+  attr :is_favorited, :boolean, required: true
   attr :edit_path, :string, required: true
   attr :profile_path, :string, required: true
 
@@ -35,12 +36,15 @@ defmodule RealworldWeb.ArticleLive.Actions do
           <i class="ion-plus-round"></i>
           &nbsp; Follow <%= @article.user.username %>
         </button>
-        <button :if={@is_following} class="btn btn-sm btn-outline-secondary" phx-click="unfollow-profile">
+        <button :if={@is_following} class="btn btn-sm btn-secondary" phx-click="unfollow-profile">
           <i class="ion-plus-round"></i>
           &nbsp; Unfollow <%= @article.user.username %>
         </button>
-        <button class="btn btn-sm btn-outline-primary" phx-click="favorite-article">
-          <i class="ion-heart"></i> &nbsp; Favorite Post <span class="counter">(29)</span>
+        <button :if={!@is_favorited} class="btn btn-sm btn-outline-primary" phx-click="favorite-article">
+          <i class="ion-heart"></i> &nbsp; Favorite Article <span class="counter">(<%= @article.favorites_count %>)</span>
+        </button>
+        <button :if={@is_favorited} class="btn btn-sm btn-primary" phx-click="unfavorite-article">
+          <i class="ion-heart"></i> &nbsp; Unfavorite Article <span class="counter">(<%= @article.favorites_count %>)</span>
         </button>
       </span>
     </div>
