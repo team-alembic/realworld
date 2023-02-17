@@ -133,7 +133,12 @@ defmodule RealworldWeb.ArticleLive.Index do
   defp get_article_by_slug(slug) do
     slug
     |> Article.get_by_slug()
-    |> Realworld.Articles.load([:user, :tags, :favorites_count])
+    |> Realworld.Articles.load([
+      :user,
+      :tags,
+      :favorites_count,
+      comments: [user: [:username, :image]]
+    ])
   end
 
   defp is_owner?(nil, _), do: false

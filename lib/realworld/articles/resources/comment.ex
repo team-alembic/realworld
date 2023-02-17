@@ -8,21 +8,19 @@ defmodule Realworld.Articles.Comment do
   end
 
   actions do
-    defaults [:create, :read, :destroy]
+    defaults [:read, :destroy]
 
-    create :add_comment_to_article do
+    create :add_comment do
+      primary? true
       accept [:body]
 
       argument :article_id, :uuid do
         allow_nil? false
       end
 
-      argument :user_id, :uuid do
-        allow_nil? false
-      end
+      change relate_actor(:user)
 
       change manage_relationship(:article_id, :article, type: :append)
-      change manage_relationship(:user_id, :user, type: :append)
     end
 
     read :comments_by_article do

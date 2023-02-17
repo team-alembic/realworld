@@ -123,6 +123,8 @@ defmodule Realworld.Articles.Article do
   end
 
   relationships do
+    has_many :comments, Realworld.Articles.Comment
+
     belongs_to :user, Realworld.Accounts.User do
       api Realworld.Accounts
       writable? true

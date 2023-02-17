@@ -1,0 +1,46 @@
+<div>
+  <p :if={!@current_user}>
+    <a href={Routes.auth_index_path(@socket, :login)}>Sign in</a>
+    or <a href={Routes.auth_index_path(@socket, :register)}>sign up</a>
+    to add comments on this article.
+  </p>
+
+  <div :if={@current_user}>
+    <form class="card comment-form">
+      <div class="card-block">
+        <textarea class="form-control" placeholder="Write a comment..." rows="3"></textarea>
+      </div>
+      <div class="card-footer">
+        <img src={@current_user.image} class="comment-author-img" />
+        <button class="btn btn-sm btn-primary">Post Comment</button>
+      </div>
+    </form>
+  </div>
+
+  <div :for={comment <- @comments} class="card">
+    <div class="card-block">
+      <p class="card-text">
+        <%= comment.body %>
+      </p>
+    </div>
+    <div class="card-footer">
+      <a
+        href={Routes.profile_index_path(@socket, :profile, comment.user.username)}
+        class="comment-author"
+      >
+        <img src={comment.user.image} class="comment-author-img" />
+      </a>
+      &nbsp;
+      <a
+        href={Routes.profile_index_path(@socket, :profile, comment.user.username)}
+        class="comment-author"
+      >
+        <%= comment.user.username %>
+      </a>
+      <span class="date-posted"><%= Calendar.strftime(comment.created_at, "%B %d, %Y") %></span>
+      <span :if={@current_user.id == comment.user.id} class="mod-options">
+        <i class="ion-trash-a"></i>
+      </span>
+    </div>
+  </div>
+</div>
