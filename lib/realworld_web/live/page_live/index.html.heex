@@ -13,7 +13,7 @@
       <div class="col-md-9">
         <div class="feed-toggle">
           <ul class="nav nav-pills outline-active">
-            <%= if @current_user do %>
+            <%= if assigns[:current_user] do %>
               <li class="nav-item">
                 <a class="nav-link disabled" href="">Your Feed</a>
               </li>

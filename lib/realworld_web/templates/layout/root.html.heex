@@ -35,24 +35,30 @@
           <a class="navbar-brand" href={Routes.page_index_path(@conn, :index)}>conduit</a>
           <ul class="nav navbar-nav pull-xs-right">
             <li class="nav-item">
-              <!-- Add "active" class when you're on that page" -->
-              <a class="nav-link active" href={Routes.page_index_path(@conn, :index)}>Home</a>
+              <.nav_link href={Routes.page_index_path(@conn, :index)} path_info={@conn.path_info}>
+                Home
+              </.nav_link>
             </li>
 
             <%= if @conn.assigns.current_user do %>
               <li class="nav-item">
-                <a class="nav-link" href="/editor">
+                <.nav_link
+                  href={Routes.editor_index_path(@conn, :new)}
+                  path_info={@conn.path_info}
+                >
                   <i class="ion-compose"></i>&nbsp;New Article
-                </a>
+                </.nav_link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href={Routes.settings_index_path(@conn, :index)}>
+                <.nav_link
+                  href={Routes.settings_index_path(@conn, :index)}
+                  path_info={@conn.path_info}
+                >
                   <i class="ion-gear-a"></i>&nbsp;Settings
-                </a>
+                </.nav_link>
               </li>
               <li class="nav-item">
-                <a
-                  class="nav-link"
+                <.nav_link
                   href={
                     Routes.profile_index_path(
                       @conn,
@@ -60,17 +66,28 @@
                       @conn.assigns.current_user.username
                     )
                   }
+                  path_info={@conn.path_info}
                 >
                   <img class="user-pic" src={@conn.assigns.current_user.image} loading="lazy" />
                   <%= @conn.assigns.current_user.username %>
-                </a>
+                </.nav_link>
               </li>
             <% else %>
               <li class="nav-item">
-                <a class="nav-link" href={Routes.auth_index_path(@conn, :login)}>Sign in</a>
+                <.nav_link
+                  href={Routes.auth_index_path(@conn, :login)}
+                  path_info={@conn.path_info}
+                >
+                  Sign in
+                </.nav_link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href={Routes.auth_index_path(@conn, :register)}>Sign up</a>
+                <.nav_link
+                  href={Routes.auth_index_path(@conn, :register)}
+                  path_info={@conn.path_info}
+                >
+                  Sign up
+                </.nav_link>
               </li>
             <% end %>
           </ul>

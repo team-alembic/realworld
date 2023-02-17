@@ -122,11 +122,6 @@ defmodule Realworld.Articles.Article do
     count :favorites_count, :favorites
   end
 
-  # calculations do
-  #   calculate :is_favorited, :boolean, expr(exists(favorites, id == ^actor(:id)))
-  #   # calculate :is_favorited, :string, expr(^actor(:id))
-  # end
-
   relationships do
     belongs_to :user, Realworld.Accounts.User do
       api Realworld.Accounts
