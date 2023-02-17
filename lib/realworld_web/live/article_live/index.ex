@@ -3,9 +3,11 @@ defmodule RealworldWeb.ArticleLive.Index do
 
   import RealworldWeb.ArticleLive.Actions, only: [actions: 1]
 
+  alias Ash.Query
   alias Realworld.Articles
   alias Realworld.Profiles
   alias Realworld.Articles.{Article, Favorite}
+  alias Realworld.Accounts.User
 
   @impl true
   def mount(_params, _session, socket) do
@@ -131,13 +133,15 @@ defmodule RealworldWeb.ArticleLive.Index do
   end
 
   defp get_article_by_slug(slug) do
+    comment_user_query = Query.select(User, [:username, :image])
+
     slug
     |> Article.get_by_slug()
-    |> Realworld.Articles.load([
+    |> Articles.load([
       :user,
       :tags,
       :favorites_count,
-      comments: [user: [:username, :image]]
+      comments: [user: comment_user_query]
     ])
   end
 
