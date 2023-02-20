@@ -15,12 +15,31 @@
           <ul class="nav nav-pills outline-active">
             <%= if assigns[:current_user] do %>
               <li class="nav-item">
-                <a class="nav-link disabled" href="">Your Feed</a>
+                <a
+                  class={"nav-link disabled #{active_class(:private_feed, @active_view)}"}
+                  phx-click="private-feed"
+                  href="/"
+                >
+                  Your Feed
+                </a>
               </li>
             <% end %>
             <li class="nav-item">
-              <a class="nav-link active" href="">Global Feed</a>
+              <a
+                class={"nav-link #{active_class(:global_feed, @active_view)}"}
+                phx-click="global-feed"
+                href="/"
+              >
+                Global Feed
+              </a>
             </li>
+            <%= if @active_view == :tag_feed do %>
+              <li class="nav-item">
+                <span class={"nav-link #{active_class(:tag_feed, @active_view)}"}>
+                  <%= @filter_tag %>
+                </span>
+              </li>
+            <% end %>
           </ul>
         </div>
 
@@ -38,14 +57,11 @@
           <p>Popular Tags</p>
 
           <div class="tag-list">
-            <a href="" class="tag-pill tag-default">programming</a>
-            <a href="" class="tag-pill tag-default">javascript</a>
-            <a href="" class="tag-pill tag-default">emberjs</a>
-            <a href="" class="tag-pill tag-default">angularjs</a>
-            <a href="" class="tag-pill tag-default">react</a>
-            <a href="" class="tag-pill tag-default">mean</a>
-            <a href="" class="tag-pill tag-default">node</a>
-            <a href="" class="tag-pill tag-default">rails</a>
+            <%= for tag <- @tags do %>
+              <.link patch={"?tag=#{tag.name}"} class="tag-pill tag-default">
+                <%= tag.name %>
+              </.link>
+            <% end %>
           </div>
         </div>
       </div>
