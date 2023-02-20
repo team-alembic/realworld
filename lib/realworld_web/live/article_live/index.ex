@@ -6,7 +6,7 @@ defmodule RealworldWeb.ArticleLive.Index do
   alias Ash.Query
   alias Realworld.Articles
   alias Realworld.Profiles
-  alias Realworld.Articles.{Article, Favorite}
+  alias Realworld.Articles.{Article, Comment, Favorite}
   alias Realworld.Accounts.User
 
   @impl true
@@ -20,7 +20,14 @@ defmodule RealworldWeb.ArticleLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    socket = apply_action(socket, socket.assigns.live_action, params)
+
+    if connected?(socket) do
+      RealworldWeb.Endpoint.subscribe("comment:created:#{socket.assigns.article.id}")
+      RealworldWeb.Endpoint.subscribe("comment:destroyed:#{socket.assigns.article.id}")
+    end
+
+    {:noreply, socket}
   end
 
   defp apply_action(socket, :index, %{"slug" => slug}) do
@@ -49,7 +56,7 @@ defmodule RealworldWeb.ArticleLive.Index do
   def handle_event(
         "favorite-article",
         _,
-        %{assigns: %{current_user: current_user, article: article}} = socket
+        %{assigns: %{current_user: _current_user, article: article}} = socket
       ) do
     case Favorite.favorite(article) do
       {:ok, favorite} ->
@@ -70,7 +77,7 @@ defmodule RealworldWeb.ArticleLive.Index do
   def handle_event(
         "unfavorite-article",
         _,
-        %{assigns: %{current_user: current_user, article: article, favorite: favorite}} = socket
+        %{assigns: %{current_user: _current_user, article: article, favorite: favorite}} = socket
       ) do
     case Articles.destroy(favorite) do
       :ok ->
@@ -132,8 +139,41 @@ defmodule RealworldWeb.ArticleLive.Index do
     {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
   end
 
+  @impl true
+  def handle_info(
+        %{topic: "comment:created:" <> _, event: "create", payload: %{payload: %{data: comment}}},
+        socket
+      ) do
+    socket =
+      update(socket, :article, fn article ->
+        Map.put(article, :comments, article.comments ++ [comment])
+      end)
+
+    {:noreply, socket}
+  end
+
+  def handle_info(
+        %{
+          topic: "comment:destroyed:" <> _,
+          event: "destroy",
+          payload: %{payload: %{data: comment}}
+        },
+        socket
+      ) do
+    socket =
+      update(socket, :article, fn article ->
+        comments = Enum.reject(article.comments, fn c -> c.id == comment.id end)
+        Map.put(article, :comments, comments)
+      end)
+
+    {:noreply, socket}
+  end
+
   defp get_article_by_slug(slug) do
-    comment_user_query = Query.select(User, [:username, :image])
+    comment_user_query = User |> Query.select([:username, :image, :created_at])
+
+    comments_query =
+      Comment |> Query.sort(created_at: :asc) |> Query.load(user: comment_user_query)
 
     slug
     |> Article.get_by_slug()
@@ -141,7 +181,7 @@ defmodule RealworldWeb.ArticleLive.Index do
       :user,
       :tags,
       :favorites_count,
-      comments: [user: comment_user_query]
+      comments: comments_query
     ])
   end
 

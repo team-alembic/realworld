@@ -22,12 +22,9 @@ defmodule RealworldWeb.EditorLive.Index do
   def handle_event("save", _params, socket) do
     case AshPhoenix.Form.submit(socket.assigns.form) do
       {:ok, result} ->
-        # Do something with the result, like redirect
-        IO.inspect(result)
         {:noreply, redirect(socket, to: "/article/#{result.slug}")}
 
       {:error, form} ->
-        IO.inspect(form)
         {:noreply, assign(socket, form: form)}
     end
   end

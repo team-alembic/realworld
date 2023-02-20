@@ -6,18 +6,29 @@
   </p>
 
   <div :if={@current_user}>
-    <form class="card comment-form">
+    <.form
+      :let={f}
+      for={@form}
+      class="card comment-form"
+      phx-submit="post-comment"
+      phx-target={@myself}
+    >
       <div class="card-block">
-        <textarea class="form-control" placeholder="Write a comment..." rows="3"></textarea>
+        <%= textarea(f, :body,
+          class: "form-control",
+          placeholder: "Write a comment...",
+          rows: 3
+        ) %>
+        <%= error_tag(f, :body) %>
       </div>
       <div class="card-footer">
         <img src={@current_user.image} class="comment-author-img" />
-        <button class="btn btn-sm btn-primary">Post Comment</button>
+        <%= submit("Post Comment", class: "btn btn-sm btn-primary") %>
       </div>
-    </form>
+    </.form>
   </div>
 
-  <div :for={comment <- @comments} class="card">
+  <div :for={comment <- @comments} class="card" id={comment.id}>
     <div class="card-block">
       <p class="card-text">
         <%= comment.body %>
@@ -38,8 +49,15 @@
         <%= comment.user.username %>
       </a>
       <span class="date-posted"><%= Calendar.strftime(comment.created_at, "%B %d, %Y") %></span>
-      <span :if={@current_user.id == comment.user.id} class="mod-options">
-        <i class="ion-trash-a"></i>
+      <span :if={@current_user && @current_user.id == comment.user.id} class="mod-options">
+        <i
+          class="ion-trash-a"
+          role="button"
+          phx-click="delete-comment"
+          phx-target={@myself}
+          phx-value-id={comment.id}
+        >
+        </i>
       </span>
     </div>
   </div>

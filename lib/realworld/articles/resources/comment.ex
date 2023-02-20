@@ -1,16 +1,45 @@
 defmodule Realworld.Articles.Comment do
   use Ash.Resource,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer],
+    notifiers: [Ash.Notifier.PubSub]
 
   postgres do
     table "comments"
     repo Realworld.Repo
   end
 
+  policies do
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
+    policy action_type(:create) do
+      authorize_if actor_present()
+    end
+
+    policy action_type(:update) do
+      authorize_if relates_to_actor_via(:user)
+    end
+
+    policy action_type(:destroy) do
+      authorize_if relates_to_actor_via(:user)
+    end
+  end
+
+  pub_sub do
+    module RealworldWeb.Endpoint
+    prefix "comment"
+    broadcast_type :phoenix_broadcast
+
+    publish :create, ["created", :article_id]
+    publish :destroy, ["destroyed", :article_id]
+  end
+
   actions do
     defaults [:read, :destroy]
 
-    create :add_comment do
+    create :create do
       primary? true
       accept [:body]
 
