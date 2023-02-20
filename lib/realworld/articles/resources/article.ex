@@ -32,6 +32,7 @@ defmodule Realworld.Articles.Article do
     define :get_by_slug, action: :by_slug, args: [:slug]
 
     define :list_articles, action: :list_articles, args: [{:optional, :filter}]
+    define :list_articles_feed, action: :list_articles_feed
   end
 
   actions do
@@ -54,6 +55,16 @@ defmodule Realworld.Articles.Article do
       end
 
       prepare Realworld.Articles.Article.Preparations.FilterSortFeed
+    end
+
+    read :list_articles_feed do
+      pagination do
+        default_limit 20
+        offset? true
+        countable :by_default
+      end
+
+      prepare Realworld.Articles.Article.Preparations.GlobalFeed
     end
 
     create :publish do

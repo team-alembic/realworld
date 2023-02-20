@@ -10,12 +10,18 @@ defmodule Realworld.Profiles.Follow do
   code_interface do
     define_for Realworld.Profiles
 
+    #TODO: do not pass user_id as arg, get it from actor_id
     define :following?, args: [:user_id, :target_id]
     define :create_following, args: [:user_id, :target_id]
+    define :list_followings
   end
 
   actions do
     defaults [:destroy]
+
+    read :list_followings do
+      filter expr(user_id == ^actor(:id))
+    end
 
     read :following? do
       get? true

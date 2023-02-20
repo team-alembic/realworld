@@ -46,9 +46,16 @@ defmodule RealworldWeb.PageLive.Index do
     end
   end
 
-  defp list_articles(%{assigns: %{current_user: current_user}} = socket) do
+  defp list_articles(%{assigns: %{current_user: current_user, active_view: :global_feed}} = socket) do
     Article.list_articles(
              construct_filter(socket.assigns),
+             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
+             actor: current_user
+           )
+  end
+
+  defp list_articles(%{assigns: %{current_user: current_user, active_view: :private_feed}} = socket) do
+    Article.list_articles_feed(
              page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
              actor: current_user
            )
@@ -93,7 +100,7 @@ defmodule RealworldWeb.PageLive.Index do
 
   @impl true
   def handle_event("global-feed", _params, socket) do
-    socket
+    socket = socket
     |> assign(:filter_tag, nil)
     |> assign(:active_view, :global_feed)
     |> assign(:active_page, 1)
@@ -104,7 +111,7 @@ defmodule RealworldWeb.PageLive.Index do
 
   @impl true
   def handle_event("private-feed", _params, socket) do
-    socket
+    socket = socket
     |> assign(:filter_tag, nil)
     |> assign(:active_view, :private_feed)
     |> assign(:active_page, 1)
