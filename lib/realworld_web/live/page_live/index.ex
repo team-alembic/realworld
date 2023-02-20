@@ -1,6 +1,7 @@
 defmodule RealworldWeb.PageLive.Index do
   use RealworldWeb, :live_view
-  alias Realworld.Articles.Article
+  alias Realworld.Articles
+  alias Realworld.Articles.{Article, Favorite}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -36,7 +37,8 @@ defmodule RealworldWeb.PageLive.Index do
     with {:ok, page} <-
            Article.list_articles(
              construct_filter(socket.assigns),
-             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
+             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
+             actor: socket.assigns.current_user
            ),
          {:ok, tags} <- Realworld.Articles.Tag |> Realworld.Articles.read() do
       socket
@@ -99,5 +101,77 @@ defmodule RealworldWeb.PageLive.Index do
     |> assign(:page_offset, 0)
 
     {:noreply, push_patch(socket, to: "/")}
+  end
+
+  def handle_event(
+        "favorite-article",
+        %{"article_id" => article_id},
+        %{assigns: %{current_user: current_user}} = socket
+      ) do
+    article =
+      socket.assigns.articles
+      |> Enum.find(fn article -> article.id == article_id end)
+
+    case Favorite.favorite(article, actor: current_user) do
+      {:ok, _favorite} ->
+        new_articles =
+          socket.assigns.articles
+          |> Enum.map(fn article ->
+            if article.id === article_id do
+              article
+              |> Map.put(:favorites_count, article.favorites_count + 1)
+              |> Map.put(:is_favorited, true)
+            else
+              article
+            end
+          end)
+
+        socket =
+          socket
+          |> assign(:articles, new_articles)
+
+        {:noreply, socket}
+
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event(
+        "unfavorite-article",
+        %{"article_id" => article_id},
+        %{assigns: %{current_user: current_user}} = socket
+      ) do
+    with {:ok, favorite} <- Favorite.favorited(article_id, actor: current_user),
+         :ok <- Articles.destroy(favorite, actor: current_user) do
+      new_articles =
+        socket.assigns.articles
+        |> Enum.map(fn article ->
+          if article.id === article_id do
+            article
+            |> Map.put(:favorites_count, article.favorites_count - 1)
+            |> Map.put(:is_favorited, false)
+          else
+            article
+          end
+        end)
+
+      socket =
+        socket
+        |> assign(:articles, new_articles)
+
+      {:noreply, socket}
+    else
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event("favorite-article", _, socket) do
+    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+  end
+
+  def handle_event("unfavorite-article", _, socket) do
+    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
   end
 end

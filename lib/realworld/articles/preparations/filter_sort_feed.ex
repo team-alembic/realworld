@@ -2,14 +2,27 @@ defmodule Realworld.Articles.Article.Preparations.FilterSortFeed do
   use Ash.Resource.Preparation
   require Ash.Query
 
-  def prepare(query, _, _) do
+  def prepare(query, _, %{actor: nil}) do
     query
     |> filter_by_tag()
     |> filter_by_author()
     |> filter_by_favourited()
     |> Ash.Query.sort([created_at: :desc], prepend?: true)
-    |> Ash.Query.load(:user)
-    |> Ash.Query.load(:tags)
+    |> Ash.Query.load([:user, :tags, :favorites_count])
+  end
+
+  def prepare(query, _, %{actor: actor}) do
+    query
+    |> filter_by_tag()
+    |> filter_by_author()
+    |> filter_by_favourited()
+    |> Ash.Query.sort([created_at: :desc], prepend?: true)
+    |> Ash.Query.load([
+      :user,
+      :tags,
+      :favorites_count,
+      is_favorited: %{actor_id: actor.id}
+    ])
   end
 
   defp filter_by_tag(query) do

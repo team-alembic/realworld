@@ -21,10 +21,7 @@ defmodule RealworldWeb.ArticleLive.Actions do
         </span>
       </div>
       <span :if={@is_owner}>
-        <a
-          class="btn btn-outline-secondary btn-sm"
-          href={@edit_path}
-        >
+        <a class="btn btn-outline-secondary btn-sm" href={@edit_path}>
           <i class="ion-edit"></i> Edit Article
         </a>
         <button class="btn btn-outline-danger btn-sm" phx-click="delete-article">
@@ -32,19 +29,27 @@ defmodule RealworldWeb.ArticleLive.Actions do
         </button>
       </span>
       <span :if={!@is_owner}>
-        <button :if={!@is_following} class="btn btn-sm btn-outline-secondary" phx-click="follow-profile">
-          <i class="ion-plus-round"></i>
-          &nbsp; Follow <%= @article.user.username %>
+        <button
+          :if={!@is_following}
+          class="btn btn-sm btn-outline-secondary"
+          phx-click="follow-profile"
+        >
+          <i class="ion-plus-round"></i> &nbsp; Follow <%= @article.user.username %>
         </button>
         <button :if={@is_following} class="btn btn-sm btn-secondary" phx-click="unfollow-profile">
-          <i class="ion-plus-round"></i>
-          &nbsp; Unfollow <%= @article.user.username %>
+          <i class="ion-plus-round"></i> &nbsp; Unfollow <%= @article.user.username %>
         </button>
-        <button :if={!@is_favorited} class="btn btn-sm btn-outline-primary" phx-click="favorite-article">
-          <i class="ion-heart"></i> &nbsp; Favorite Article <span class="counter">(<%= @article.favorites_count %>)</span>
+        <button
+          :if={!@is_favorited}
+          class="btn btn-sm btn-outline-primary"
+          phx-click="favorite-article"
+        >
+          <i class="ion-heart"></i>
+          &nbsp; Favorite Article <span class="counter">(<%= @article.favorites_count %>)</span>
         </button>
         <button :if={@is_favorited} class="btn btn-sm btn-primary" phx-click="unfavorite-article">
-          <i class="ion-heart"></i> &nbsp; Unfavorite Article <span class="counter">(<%= @article.favorites_count %>)</span>
+          <i class="ion-heart"></i>
+          &nbsp; Unfavorite Article <span class="counter">(<%= @article.favorites_count %>)</span>
         </button>
       </span>
     </div>

@@ -122,6 +122,14 @@ defmodule Realworld.Articles.Article do
     count :favorites_count, :favorites
   end
 
+  calculations do
+    calculate :is_favorited, :boolean, expr(exists(favorites, id == ^arg(:actor_id))) do
+      argument :actor_id, :uuid do
+        allow_nil? false
+      end
+    end
+  end
+
   relationships do
     has_many :comments, Realworld.Articles.Comment
 

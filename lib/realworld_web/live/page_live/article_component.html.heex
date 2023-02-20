@@ -9,8 +9,23 @@
       </a>
       <span class="date"><%= format_datetime(@article.created_at) %></span>
     </div>
-    <button class="btn btn-outline-primary btn-sm pull-xs-right">
-      <i class="ion-heart"></i> 32
+    <button
+      :if={!@article.is_favorited}
+      class="btn btn-sm btn-outline-primary pull-xs-right"
+      phx-click="favorite-article"
+      phx-value-article_id={@article.id}
+    >
+      <i class="ion-heart"></i>
+      <span class="counter"><%= @article.favorites_count %></span>
+    </button>
+    <button
+      :if={@article.is_favorited}
+      class="btn btn-sm btn-primary pull-xs-right"
+      phx-click="unfavorite-article"
+      phx-value-article_id={@article.id}
+    >
+      <i class="ion-heart"></i>
+      <span class="counter"><%= @article.favorites_count %></span>
     </button>
   </div>
   <a href={"/article/#{@article.slug}"} class="preview-link">
