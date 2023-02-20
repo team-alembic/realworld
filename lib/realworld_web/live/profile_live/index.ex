@@ -19,11 +19,11 @@ defmodule RealworldWeb.ProfileLive.Index do
   end
 
   def handle_event("follow-profile", _, %{assigns: %{current_user: nil}} = socket) do
-    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
   end
 
   def handle_event("unfollow-profile", _, %{assigns: %{current_user: nil}} = socket) do
-    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
   end
 
   def handle_event(
@@ -54,12 +54,25 @@ defmodule RealworldWeb.ProfileLive.Index do
     end
   end
 
+  defp apply_action(%{assigns: %{current_user: current_user}} = socket, :profile, %{"username" => username}) do
+    case Accounts.User.get_by_username(username) do
+      {:ok, user} ->
+        socket
+        |> assign(:profile_user, user)
+        |> assign(:following, is_following?(current_user, user))
+
+      _ ->
+        redirect(socket, to: Routes.page_index_path(socket, :index))
+    end
+  end
+
   defp apply_action(socket, :profile, %{"username" => username}) do
     case Accounts.User.get_by_username(username) do
       {:ok, user} ->
         socket
         |> assign(:profile_user, user)
-        |> assign(:following, is_following?(socket.assigns.current_user, user))
+        |> assign(:following, nil)
+        |> assign(:current_user, nil)
 
       _ ->
         redirect(socket, to: Routes.page_index_path(socket, :index))
