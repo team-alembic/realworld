@@ -34,12 +34,7 @@ defmodule RealworldWeb.PageLive.Index do
   end
 
   defp apply_action(socket, :index, _params) do
-    with {:ok, page} <-
-           Article.list_articles(
-             construct_filter(socket.assigns),
-             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
-             actor: socket.assigns.current_user
-           ),
+    with {:ok, page} <- list_articles(socket),
          {:ok, tags} <- Realworld.Articles.Tag |> Realworld.Articles.read() do
       socket
       |> assign(:articles, page.results)
@@ -49,6 +44,21 @@ defmodule RealworldWeb.PageLive.Index do
       _err ->
         put_flash(socket, :error, "Unable to fetch articles/tags. Please try again later.")
     end
+  end
+
+  defp list_articles(%{assigns: %{current_user: current_user}} = socket) do
+    Article.list_articles(
+             construct_filter(socket.assigns),
+             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
+             actor: current_user
+           )
+  end
+
+  defp list_articles(socket) do
+    Article.list_articles(
+             construct_filter(socket.assigns),
+             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
+           )
   end
 
   defp active_view(nil), do: nil
@@ -168,10 +178,10 @@ defmodule RealworldWeb.PageLive.Index do
   end
 
   def handle_event("favorite-article", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
   end
 
   def handle_event("unfavorite-article", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
   end
 end
