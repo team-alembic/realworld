@@ -38,7 +38,7 @@ defmodule Realworld.Articles.Article.Preparations.FilterSortFeed do
   defp filter_by_author(query) do
     case Ash.Changeset.get_argument(query, :filter) do
       %{author: author} ->
-        Ash.Query.filter(query, exists(user, username == ^author))
+        Ash.Query.filter(query, exists(user, id == ^author))
 
       _ ->
         query
@@ -48,7 +48,7 @@ defmodule Realworld.Articles.Article.Preparations.FilterSortFeed do
   defp filter_by_favourited(query) do
     case Ash.Changeset.get_argument(query, :filter) do
       %{favourited: favourited} ->
-        Ash.Query.filter(query, exists(favourites.user.username == ^favourited))
+        Ash.Query.filter(query, exists(favorites, id == ^favourited))
 
       _ ->
         query

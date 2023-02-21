@@ -14,8 +14,6 @@ defmodule RealworldWeb.PageLive.Index do
       |> assign(:page_offset, 0)
       |> assign(:page_limit, 20)
       |> assign(:filter_tag, nil)
-      |> assign(:filter_author, nil)
-      |> assign(:filter_favourited, nil)
       |> assign(:articles, [])
       |> assign(:tags, [])
       |> assign(:pages, 0)

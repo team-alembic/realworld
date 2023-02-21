@@ -108,7 +108,7 @@ defmodule RealworldWeb.ArticleLive.Index do
         _,
         %{assigns: %{current_user: current_user, article: %{user: user}}} = socket
       ) do
-    case Profiles.Follow.create_following(current_user.id, user.id) do
+    case Profiles.Follow.create_following(user.id) do
       {:ok, follow} ->
         {:noreply, assign(socket, following: follow)}
 
