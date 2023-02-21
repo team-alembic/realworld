@@ -58,7 +58,9 @@ defmodule RealworldWeb.ProfileLive.Index do
     end
   end
 
-  defp apply_action(%{assigns: %{current_user: current_user}} = socket, :profile, %{"username" => username}) do
+  defp apply_action(%{assigns: %{current_user: current_user}} = socket, :profile, %{
+         "username" => username
+       }) do
     case Accounts.User.get_by_username(username) do
       {:ok, user} ->
         socket

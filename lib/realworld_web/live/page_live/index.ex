@@ -50,24 +50,28 @@ defmodule RealworldWeb.PageLive.Index do
     end
   end
 
-  defp list_articles(%{assigns: %{current_user: current_user, active_view: :global_feed}} = socket) do
+  defp list_articles(
+         %{assigns: %{current_user: current_user, active_view: :global_feed}} = socket
+       ) do
     Article.list_articles(
-             construct_filter(socket.assigns),
-             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
-           )
+      construct_filter(socket.assigns),
+      page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
+    )
   end
 
-  defp list_articles(%{assigns: %{current_user: current_user, active_view: :private_feed}} = socket) do
+  defp list_articles(
+         %{assigns: %{current_user: current_user, active_view: :private_feed}} = socket
+       ) do
     Article.list_articles_feed(
-             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
-           )
+      page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
+    )
   end
 
   defp list_articles(socket) do
     Article.list_articles(
-             construct_filter(socket.assigns),
-             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
-           )
+      construct_filter(socket.assigns),
+      page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
+    )
   end
 
   defp active_view(nil), do: nil
@@ -102,22 +106,24 @@ defmodule RealworldWeb.PageLive.Index do
 
   @impl true
   def handle_event("global-feed", _params, socket) do
-    socket = socket
-    |> assign(:filter_tag, nil)
-    |> assign(:active_view, :global_feed)
-    |> assign(:active_page, 1)
-    |> assign(:page_offset, 0)
+    socket =
+      socket
+      |> assign(:filter_tag, nil)
+      |> assign(:active_view, :global_feed)
+      |> assign(:active_page, 1)
+      |> assign(:page_offset, 0)
 
     {:noreply, push_patch(socket, to: "/")}
   end
 
   @impl true
   def handle_event("private-feed", _params, socket) do
-    socket = socket
-    |> assign(:filter_tag, nil)
-    |> assign(:active_view, :private_feed)
-    |> assign(:active_page, 1)
-    |> assign(:page_offset, 0)
+    socket =
+      socket
+      |> assign(:filter_tag, nil)
+      |> assign(:active_view, :private_feed)
+      |> assign(:active_page, 1)
+      |> assign(:page_offset, 0)
 
     {:noreply, push_patch(socket, to: "/")}
   end
