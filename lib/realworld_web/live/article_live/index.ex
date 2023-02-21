@@ -96,11 +96,11 @@ defmodule RealworldWeb.ArticleLive.Index do
   end
 
   def handle_event("favorite-article", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
   end
 
   def handle_event("unfavorite-article", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
   end
 
   def handle_event(
@@ -132,11 +132,11 @@ defmodule RealworldWeb.ArticleLive.Index do
   end
 
   def handle_event("follow-profile", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
   end
 
   def handle_event("unfollow-profile", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_path(socket, {:user, :password, :sign_in}))}
+    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
   end
 
   @impl true
