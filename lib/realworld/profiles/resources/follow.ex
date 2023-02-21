@@ -1,52 +1,58 @@
 defmodule Realworld.Profiles.Follow do
   use Ash.Resource,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer]
 
   postgres do
     table "follows"
     repo Realworld.Repo
   end
 
+  policies do
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
+    policy action_type(:create) do
+      authorize_if actor_present()
+    end
+
+    policy action_type(:destroy) do
+      authorize_if relates_to_actor_via(:user)
+    end
+  end
+
   code_interface do
     define_for Realworld.Profiles
 
-    #TODO: do not pass user_id as arg, get it from actor_id
-    define :following?, args: [:user_id, :target_id]
-    define :create_following, args: [:user_id, :target_id]
+    define :following, args: [:target_id]
+    define :create_following, args: [:target_id]
     define :list_followings
   end
 
   actions do
-    defaults [:destroy]
+    defaults [:read, :destroy]
 
     read :list_followings do
       filter expr(user_id == ^actor(:id))
     end
 
-    read :following? do
+    read :following do
       get? true
-
-      argument :user_id, :uuid do
-        allow_nil? false
-      end
 
       argument :target_id, :uuid do
         allow_nil? false
       end
 
-      filter expr(user_id == ^arg(:user_id) and target_id == ^arg(:target_id))
+      filter expr(user_id == ^actor(:id) and target_id == ^arg(:target_id))
     end
 
     create :create_following do
-      argument :user_id, :uuid do
-        allow_nil? false
-      end
-
       argument :target_id, :uuid do
         allow_nil? false
       end
 
-      change manage_relationship(:user_id, :user, type: :append)
+      change relate_actor(:user)
       change manage_relationship(:target_id, :target, type: :append)
     end
   end

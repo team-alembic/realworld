@@ -192,7 +192,7 @@ defmodule RealworldWeb.ArticleLive.Index do
   defp follows(_current_user = nil, _user), do: nil
 
   defp follows(current_user, user) do
-    case Profiles.Follow.following?(current_user.id, user.id) do
+    case Profiles.Follow.following(user.id) do
       {:ok, follow} -> follow
       _ -> nil
     end

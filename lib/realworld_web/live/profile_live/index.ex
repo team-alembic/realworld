@@ -5,6 +5,10 @@ defmodule RealworldWeb.ProfileLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    if socket.assigns[:current_user] do
+      Ash.set_actor(socket.assigns[:current_user])
+    end
+
     {:ok, socket}
   end
 
@@ -31,7 +35,7 @@ defmodule RealworldWeb.ProfileLive.Index do
         _,
         %{assigns: %{current_user: current_user, profile_user: profile_user}} = socket
       ) do
-    case Profiles.Follow.create_following(current_user.id, profile_user.id) do
+    case Profiles.Follow.create_following(profile_user.id) do
       {:ok, follow} ->
         {:noreply, assign(socket, following: follow)}
 
@@ -59,7 +63,7 @@ defmodule RealworldWeb.ProfileLive.Index do
       {:ok, user} ->
         socket
         |> assign(:profile_user, user)
-        |> assign(:following, is_following?(current_user, user))
+        |> assign(:following, following(current_user, user))
 
       _ ->
         redirect(socket, to: Routes.page_index_path(socket, :index))
@@ -79,10 +83,10 @@ defmodule RealworldWeb.ProfileLive.Index do
     end
   end
 
-  defp is_following?(_current_user = nil, _profile_user), do: false
+  defp following(_current_user = nil, _profile_user), do: false
 
-  defp is_following?(current_user, profile_user) do
-    case Profiles.Follow.following?(current_user.id, profile_user.id) do
+  defp following(current_user, profile_user) do
+    case Profiles.Follow.following(profile_user.id) do
       {:ok, follow} ->
         follow
 
