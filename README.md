@@ -37,7 +37,16 @@ For more information on how to this works with other frontends/backends, head ov
    mix ash_postgres.create && mix ash_postgres.migrate
    ```
 
+### Test
+1. Create a test database and run migration with ash_postgres
+   ```
+   MIX_ENV=test mix ash_postgres.create && MIX_ENV=test mix ash_postgres.migrate
+   ```
 
+2. Run the tests
+   ```
+   mix test
+   ```
 
 # Getting started
 
