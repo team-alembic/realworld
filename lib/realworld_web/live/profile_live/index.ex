@@ -73,12 +73,15 @@ defmodule RealworldWeb.ProfileLive.Index do
     end
   end
 
-  defp apply_action(%{assigns: %{current_user: current_user}} = socket, :profile, %{"username" => username}) do
+  defp apply_action(%{assigns: %{current_user: current_user}} = socket, :profile, %{
+         "username" => username
+       }) do
     with {:ok, user} <- Accounts.User.get_by_username(username),
-         {:ok, page} <- Article.list_articles(
-          construct_filter(socket.assigns.active_view, user),
-          page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
-        ) do
+         {:ok, page} <-
+           Article.list_articles(
+             construct_filter(socket.assigns.active_view, user),
+             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
+           ) do
       socket
       |> assign(:articles, page.results)
       |> assign(:pages, ceil(page.count / socket.assigns.page_limit))
@@ -92,10 +95,11 @@ defmodule RealworldWeb.ProfileLive.Index do
 
   defp apply_action(socket, :profile, %{"username" => username}) do
     with {:ok, user} <- Accounts.User.get_by_username(username),
-         {:ok, page} <- Article.list_articles(
-          construct_filter(socket.assigns.active_view, user),
-          page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
-        ) do
+         {:ok, page} <-
+           Article.list_articles(
+             construct_filter(socket.assigns.active_view, user),
+             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
+           ) do
       socket
       |> assign(:articles, page.results)
       |> assign(:pages, ceil(page.count / socket.assigns.page_limit))
@@ -155,20 +159,22 @@ defmodule RealworldWeb.ProfileLive.Index do
 
   @impl true
   def handle_event("my-articles", _params, socket) do
-    socket = socket
-    |> assign(:active_view, :my_articles)
-    |> assign(:active_page, 1)
-    |> assign(:page_offset, 0)
+    socket =
+      socket
+      |> assign(:active_view, :my_articles)
+      |> assign(:active_page, 1)
+      |> assign(:page_offset, 0)
 
     {:noreply, push_patch(socket, to: "/profile/#{socket.assigns.profile_user.username}")}
   end
 
   @impl true
   def handle_event("my-favourite-articles", _params, socket) do
-    socket = socket
-    |> assign(:active_view, :my_favourite_articles)
-    |> assign(:active_page, 1)
-    |> assign(:page_offset, 0)
+    socket =
+      socket
+      |> assign(:active_view, :my_favourite_articles)
+      |> assign(:active_page, 1)
+      |> assign(:page_offset, 0)
 
     {:noreply, push_patch(socket, to: "/profile/#{socket.assigns.profile_user.username}")}
   end

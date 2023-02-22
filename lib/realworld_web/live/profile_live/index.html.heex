@@ -40,12 +40,20 @@
         <div class="articles-toggle">
           <ul class="nav nav-pills outline-active">
             <li class="nav-item">
-              <span role="button" class={"nav-link #{active_class(:my_articles, @active_view)}"} phx-click="my-articles">
+              <span
+                role="button"
+                class={"nav-link #{active_class(:my_articles, @active_view)}"}
+                phx-click="my-articles"
+              >
                 My Articles
               </span>
             </li>
             <li class="nav-item">
-              <span role="button" class={"nav-link #{active_class(:my_favourite_articles, @active_view)}"} phx-click="my-favourite-articles">
+              <span
+                role="button"
+                class={"nav-link #{active_class(:my_favourite_articles, @active_view)}"}
+                phx-click="my-favourite-articles"
+              >
                 Favorited Articles
               </span>
             </li>

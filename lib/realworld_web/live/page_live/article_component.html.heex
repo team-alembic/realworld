@@ -34,10 +34,10 @@
     <span phx-click="read-more" phx-value-slug={@article.slug} phx-target={@myself}>
       Read more...
     </span>
-     <ul class="tag-list">
+    <ul class="tag-list">
       <%= for tag <- @article.tags do %>
-       <li class="tag-default tag-pill tag-outline"><%= tag.name %></li>
+        <li class="tag-default tag-pill tag-outline"><%= tag.name %></li>
       <% end %>
-     </ul>
+    </ul>
   </a>
 </div>
