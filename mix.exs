@@ -51,7 +51,8 @@ defmodule Realworld.MixProject do
       {:ash_authentication, "~> 3.7.6"},
       {:ash_authentication_phoenix, "~> 1.4.6"},
       {:slugify, "~> 1.3.1"},
-      {:earmark, "~> 1.4.36"}
+      {:earmark, "~> 1.4.36"},
+      {:faker, "~> 0.17", only: :test}
     ]
   end
 
