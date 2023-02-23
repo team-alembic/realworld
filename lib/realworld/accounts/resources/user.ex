@@ -35,7 +35,7 @@ defmodule Realworld.Accounts.User do
     attribute(:username, :string, allow_nil?: false)
     attribute(:hashed_password, :string, allow_nil?: false, sensitive?: true)
     attribute(:bio, :string)
-    attribute(:image, :string)
+    attribute(:image, :string, default: "https://api.realworld.io/images/smiley-cyrus.jpeg")
 
     create_timestamp(:created_at)
     update_timestamp(:updated_at)
