@@ -26,10 +26,11 @@ For more information on how to this works with other frontends/backends, head ov
 
 1. Clone the repo
    ```
-   git clone git@github.com:team-alembic/realworld.git
+   git clone https://github.com/team-alembic/realworld.git
    ```
 2. Install dependencies 
    ```
+   cd realworld
    mix deps.get
    ```
 3. Create a postgres database and run migration with ash_postgres
