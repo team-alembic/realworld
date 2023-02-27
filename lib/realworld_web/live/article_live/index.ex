@@ -106,7 +106,7 @@ defmodule RealworldWeb.ArticleLive.Index do
   def handle_event(
         "follow-profile",
         _,
-        %{assigns: %{current_user: current_user, article: %{user: user}}} = socket
+        %{assigns: %{current_user: _current_user, article: %{user: user}}} = socket
       ) do
     case Profiles.Follow.create_following(user.id) do
       {:ok, follow} ->
@@ -191,7 +191,7 @@ defmodule RealworldWeb.ArticleLive.Index do
 
   defp follows(_current_user = nil, _user), do: nil
 
-  defp follows(current_user, user) do
+  defp follows(_current_user, user) do
     case Profiles.Follow.following(user.id) do
       {:ok, follow} -> follow
       _ -> nil

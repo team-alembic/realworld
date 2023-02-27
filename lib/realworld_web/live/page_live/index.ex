@@ -49,7 +49,7 @@ defmodule RealworldWeb.PageLive.Index do
   end
 
   defp list_articles(
-         %{assigns: %{current_user: current_user, active_view: :global_feed}} = socket
+         %{assigns: %{current_user: _current_user, active_view: :global_feed}} = socket
        ) do
     Article.list_articles(
       construct_filter(socket.assigns),
@@ -58,7 +58,7 @@ defmodule RealworldWeb.PageLive.Index do
   end
 
   defp list_articles(
-         %{assigns: %{current_user: current_user, active_view: :private_feed}} = socket
+         %{assigns: %{current_user: _current_user, active_view: :private_feed}} = socket
        ) do
     Article.list_articles_feed(
       page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
@@ -129,7 +129,7 @@ defmodule RealworldWeb.PageLive.Index do
   def handle_event(
         "favorite-article",
         %{"article_id" => article_id},
-        %{assigns: %{current_user: current_user}} = socket
+        %{assigns: %{current_user: _current_user}} = socket
       ) do
     article =
       socket.assigns.articles
@@ -163,7 +163,7 @@ defmodule RealworldWeb.PageLive.Index do
   def handle_event(
         "unfavorite-article",
         %{"article_id" => article_id},
-        %{assigns: %{current_user: current_user}} = socket
+        %{assigns: %{current_user: _current_user}} = socket
       ) do
     with {:ok, favorite} <- Favorite.favorited(article_id),
          :ok <- Articles.destroy(favorite) do

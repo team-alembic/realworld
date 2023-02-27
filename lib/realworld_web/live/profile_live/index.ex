@@ -73,6 +73,26 @@ defmodule RealworldWeb.ProfileLive.Index do
     end
   end
 
+  def handle_event("my-articles", _params, socket) do
+    socket =
+      socket
+      |> assign(:active_view, :my_articles)
+      |> assign(:active_page, 1)
+      |> assign(:page_offset, 0)
+
+    {:noreply, push_patch(socket, to: "/profile/#{socket.assigns.profile_user.username}")}
+  end
+
+  def handle_event("my-favourite-articles", _params, socket) do
+    socket =
+      socket
+      |> assign(:active_view, :my_favourite_articles)
+      |> assign(:active_page, 1)
+      |> assign(:page_offset, 0)
+
+    {:noreply, push_patch(socket, to: "/profile/#{socket.assigns.profile_user.username}")}
+  end
+
   defp apply_action(%{assigns: %{current_user: current_user}} = socket, :profile, %{
          "username" => username
        }) do
@@ -151,31 +171,6 @@ defmodule RealworldWeb.ProfileLive.Index do
     Map.new(%{favourited: profile_user.id})
   end
 
-  defp maybe_put(map, _key, nil), do: map
-  defp maybe_put(map, key, val), do: Map.put(map, key, val)
-
   def active_class(on_page, active_page) when on_page == active_page, do: "active"
   def active_class(_on_page, _active_page), do: ""
-
-  @impl true
-  def handle_event("my-articles", _params, socket) do
-    socket =
-      socket
-      |> assign(:active_view, :my_articles)
-      |> assign(:active_page, 1)
-      |> assign(:page_offset, 0)
-
-    {:noreply, push_patch(socket, to: "/profile/#{socket.assigns.profile_user.username}")}
-  end
-
-  @impl true
-  def handle_event("my-favourite-articles", _params, socket) do
-    socket =
-      socket
-      |> assign(:active_view, :my_favourite_articles)
-      |> assign(:active_page, 1)
-      |> assign(:page_offset, 0)
-
-    {:noreply, push_patch(socket, to: "/profile/#{socket.assigns.profile_user.username}")}
-  end
 end

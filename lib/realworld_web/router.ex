@@ -2,8 +2,6 @@ defmodule RealworldWeb.Router do
   use RealworldWeb, :router
   use AshAuthentication.Phoenix.Router
 
-  alias AshAuthentication.Phoenix.LiveSession
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
