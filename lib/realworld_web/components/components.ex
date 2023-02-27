@@ -13,8 +13,10 @@ defmodule RealworldWeb.Components do
         _ -> "nav-link"
       end
 
+    assigns = assign(assigns, :class, class)
+
     ~H"""
-    <a class={class} href={@href}>
+    <a class={@class} href={@href}>
       <%= render_slot(@inner_block) %>
     </a>
     """
