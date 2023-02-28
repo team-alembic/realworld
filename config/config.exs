@@ -52,6 +52,9 @@ config :realworld, :ash_apis, [Realworld.Accounts, Realworld.Articles, Realworld
 
 config :realworld, ecto_repos: [Realworld.Repo]
 
+config :realworld,
+  token_signing_secret: "WJ/qX8VMGRT192yLhUvJrRM32W1iycdvKVzOVfk6pJSDqF2rRRyhluZW1NRUyo83"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

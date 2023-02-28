@@ -61,7 +61,9 @@ defmodule Realworld.Accounts.User do
       enabled? true
       token_resource Realworld.Accounts.Token
 
-      signing_secret(Application.compile_env(:realworld, RealworldWeb.Endpoint)[:secret_key_base])
+      signing_secret fn _, _ ->
+        Application.fetch_env(:realworld, :token_signing_secret)
+      end
     end
   end
 end
