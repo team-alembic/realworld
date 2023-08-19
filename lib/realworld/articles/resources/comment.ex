@@ -30,7 +30,6 @@ defmodule Realworld.Articles.Comment do
   pub_sub do
     module RealworldWeb.Endpoint
     prefix "comment"
-    broadcast_type :phoenix_broadcast
 
     publish :create, ["created", :article_id]
     publish :destroy, ["destroyed", :article_id]

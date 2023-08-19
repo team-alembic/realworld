@@ -141,7 +141,7 @@ defmodule RealworldWeb.ArticleLive.Index do
 
   @impl true
   def handle_info(
-        %{topic: "comment:created:" <> _, event: "create", payload: %{payload: %{data: comment}}},
+        %{topic: "comment:created:" <> _, event: "create", payload: %{data: comment}},
         socket
       ) do
     socket =
@@ -156,7 +156,7 @@ defmodule RealworldWeb.ArticleLive.Index do
         %{
           topic: "comment:destroyed:" <> _,
           event: "destroy",
-          payload: %{payload: %{data: comment}}
+          payload: %{data: comment}
         },
         socket
       ) do
