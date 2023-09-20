@@ -53,7 +53,9 @@ defmodule Realworld.Accounts.User do
       password :password do
         identity_field :email
         hashed_password_field :hashed_password
+        sign_in_tokens_enabled? true
         confirmation_required? false
+        register_action_accept [:username]
       end
     end
 

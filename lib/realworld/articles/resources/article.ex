@@ -156,6 +156,8 @@ defmodule Realworld.Articles.Article do
       destination_attribute_on_join_resource :tag_id
     end
 
+    has_many :favorite_links, Realworld.Articles.Favorite
+
     many_to_many :favorites, Realworld.Accounts.User do
       api Realworld.Accounts
       through Realworld.Articles.Favorite

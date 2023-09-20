@@ -28,20 +28,20 @@ For more information on how to this works with other frontends/backends, head ov
    ```
    git clone https://github.com/team-alembic/realworld.git
    ```
-2. Install dependencies 
+2. Install dependencies
    ```
    cd realworld
    mix deps.get
    ```
 3. Create a postgres database and run migration with ash_postgres
    ```
-   mix ash_postgres.create && mix ash_postgres.migrate
+   mix ash.setup && mix ash.migrate
    ```
 
 ### Test
 1. Create a test database and run migration with ash_postgres
    ```
-   MIX_ENV=test mix ash_postgres.create && MIX_ENV=test mix ash_postgres.migrate
+   MIX_ENV=test mix ash_postgres.create && MIX_ENV=test mix ash.migrate
    ```
 
 2. Run the tests

@@ -6,6 +6,7 @@ defmodule Realworld.Accounts do
   end
 
   resources do
-    registry Realworld.Accounts.Registry
+    resource Realworld.Accounts.Token
+    resource Realworld.Accounts.User
   end
 end

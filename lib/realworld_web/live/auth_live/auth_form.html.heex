@@ -1,7 +1,7 @@
 <div>
   <ul class="error-messages">
     <%= if @form.errors do %>
-      <%= for {k, v} <- @errors do %>
+      <%= for {k, v} <- AshPhoenix.Form.errors(@form) do %>
         <li>
           <%= humanize("#{k} #{v}") %>
         </li>
@@ -13,10 +13,7 @@
     for={@form}
     phx-change="validate"
     phx-submit="submit"
-    phx-trigger-action={@trigger_action}
     phx-target={@myself}
-    action={@action}
-    method="POST"
   >
     <%= if @live_action in [:register] do %>
       <fieldset class="form-group">

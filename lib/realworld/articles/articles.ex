@@ -6,6 +6,10 @@ defmodule Realworld.Articles do
   end
 
   resources do
-    registry Realworld.Articles.Registry
+    resource Realworld.Articles.Article
+    resource Realworld.Articles.ArticleTag
+    resource Realworld.Articles.Comment
+    resource Realworld.Articles.Favorite
+    resource Realworld.Articles.Tag
   end
 end
