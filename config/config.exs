@@ -44,10 +44,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# https://ash-hq.org/docs/guides/ash/latest/tutorials/get-started#temporary-config
-# For backwards compatibility, the following configuration is required. Don’t worry about it for now, just know that it needs to be set until the behavior is deprecated in the next major release.
-config :ash, :use_all_identities_in_manage_relationship?, false
-
 config :realworld, :ash_apis, [Realworld.Accounts, Realworld.Articles, Realworld.Profiles]
 
 config :realworld, ecto_repos: [Realworld.Repo]
