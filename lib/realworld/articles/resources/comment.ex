@@ -2,7 +2,8 @@ defmodule Realworld.Articles.Comment do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     authorizers: [Ash.Policy.Authorizer],
-    notifiers: [Ash.Notifier.PubSub]
+    notifiers: [Ash.Notifier.PubSub],
+    domain: Realworld.Articles
 
   postgres do
     table "comments"
@@ -65,6 +66,7 @@ defmodule Realworld.Articles.Comment do
 
     attribute :body, :string do
       allow_nil? false
+      public? true
     end
 
     create_timestamp :created_at
@@ -76,8 +78,6 @@ defmodule Realworld.Articles.Comment do
       allow_nil? false
     end
 
-    belongs_to :user, Realworld.Accounts.User do
-      api Realworld.Accounts
-    end
+    belongs_to :user, Realworld.Accounts.User
   end
 end

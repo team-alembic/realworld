@@ -1,6 +1,7 @@
 defmodule Realworld.Articles.Tag do
   use Ash.Resource,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    domain: Realworld.Articles
 
   postgres do
     table "tags"
@@ -16,6 +17,7 @@ defmodule Realworld.Articles.Tag do
 
     attribute :name, :string do
       allow_nil? false
+      public? true
     end
 
     create_timestamp :created_at

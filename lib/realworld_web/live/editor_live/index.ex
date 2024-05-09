@@ -66,7 +66,6 @@ defmodule RealworldWeb.EditorLive.Index do
       {:ok, article} ->
         form =
           AshPhoenix.Form.for_update(article, :update,
-            api: Realworld.Articles,
             actor: socket.assigns.current_user,
             forms: [
               auto?: true
@@ -91,6 +90,6 @@ defmodule RealworldWeb.EditorLive.Index do
   end
 
   defp get_article_by_slug(slug) do
-    slug |> Article.get_by_slug() |> Realworld.Articles.load(:tags)
+    slug |> Article.get_by_slug() |> Ash.load(:tags)
   end
 end

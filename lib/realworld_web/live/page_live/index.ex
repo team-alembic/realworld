@@ -1,14 +1,9 @@
 defmodule RealworldWeb.PageLive.Index do
   use RealworldWeb, :live_view
-  alias Realworld.Articles
   alias Realworld.Articles.{Article, Favorite}
 
   @impl true
   def mount(_params, _session, socket) do
-    if socket.assigns[:current_user] do
-      Ash.set_actor(socket.assigns[:current_user])
-    end
-
     socket =
       socket
       |> assign(:page_offset, 0)
@@ -166,7 +161,7 @@ defmodule RealworldWeb.PageLive.Index do
         %{assigns: %{current_user: _current_user}} = socket
       ) do
     with {:ok, favorite} <- Favorite.favorited(article_id),
-         :ok <- Articles.destroy(favorite) do
+         :ok <- Ash.destroy(favorite) do
       new_articles =
         socket.assigns.articles
         |> Enum.map(fn article ->

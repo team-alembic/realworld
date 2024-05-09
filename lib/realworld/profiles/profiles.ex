@@ -1,11 +1,11 @@
 defmodule Realworld.Profiles do
-  use Ash.Api, otp_app: :realworld
+  use Ash.Domain, otp_app: :realworld
 
   authorization do
     authorize :by_default
   end
 
   resources do
-    registry Realworld.Profiles.Registry
+    resource Realworld.Profiles.Follow
   end
 end

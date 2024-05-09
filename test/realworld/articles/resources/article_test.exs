@@ -1,7 +1,6 @@
 defmodule Realworld.Articles.ArticleTest do
   use Realworld.DataCase, async: true
 
-  alias Realworld.Articles
   alias Realworld.Articles.Article
 
   test "publish article with slugified title" do
@@ -20,7 +19,7 @@ defmodule Realworld.Articles.ArticleTest do
         },
         actor: actor
       )
-      |> Articles.create()
+      |> Ash.create()
 
     assert published_article.title == title
     assert published_article.slug == Slug.slugify(title)

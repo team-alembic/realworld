@@ -1,7 +1,6 @@
 defmodule RealworldWeb.AuthLive.Index do
   use RealworldWeb, :live_view
 
-  alias Realworld.Accounts
   alias Realworld.Accounts.User
   alias AshPhoenix.Form
 
@@ -24,7 +23,7 @@ defmodule RealworldWeb.AuthLive.Index do
     |> assign(:action, ~p"/auth/user/password/register")
     |> assign(
       :form,
-      Form.for_create(User, :register_with_password, api: Accounts, as: "user")
+      Form.for_create(User, :register_with_password, as: "user")
     )
   end
 
@@ -37,7 +36,7 @@ defmodule RealworldWeb.AuthLive.Index do
     |> assign(:action, ~p"/auth/user/password/sign_in")
     |> assign(
       :form,
-      Form.for_action(User, :sign_in_with_password, api: Accounts, as: "user")
+      Form.for_action(User, :sign_in_with_password, as: "user")
     )
   end
 end

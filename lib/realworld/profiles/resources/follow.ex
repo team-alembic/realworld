@@ -1,7 +1,8 @@
 defmodule Realworld.Profiles.Follow do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
-    authorizers: [Ash.Policy.Authorizer]
+    authorizers: [Ash.Policy.Authorizer],
+    domain: Realworld.Profiles
 
   postgres do
     table "follows"
@@ -23,8 +24,6 @@ defmodule Realworld.Profiles.Follow do
   end
 
   code_interface do
-    define_for Realworld.Profiles
-
     define :following, args: [:target_id]
     define :create_following, args: [:target_id]
     define :list_followings
@@ -65,13 +64,11 @@ defmodule Realworld.Profiles.Follow do
 
   relationships do
     belongs_to :user, Realworld.Accounts.User do
-      api Realworld.Accounts
       allow_nil? false
       primary_key? true
     end
 
     belongs_to :target, Realworld.Accounts.User do
-      api Realworld.Accounts
       allow_nil? false
       primary_key? true
     end

@@ -2,7 +2,9 @@ defmodule Realworld.Articles.ArticleTag do
   @moduledoc """
   The join resource between Article and Tag
   """
-  use Ash.Resource, data_layer: AshPostgres.DataLayer
+  use Ash.Resource,
+    data_layer: AshPostgres.DataLayer,
+    domain: Realworld.Articles
 
   alias Realworld.Articles.Article
   alias Realworld.Articles.Tag

@@ -1,5 +1,5 @@
 defmodule Realworld.Articles do
-  use Ash.Api, otp_app: :realworld
+  use Ash.Domain, otp_app: :realworld
 
   authorization do
     authorize :by_default

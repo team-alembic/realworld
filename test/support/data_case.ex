@@ -50,7 +50,7 @@ defmodule Realworld.DataCase do
     user =
       Realworld.Accounts.User
       |> Ash.Changeset.for_create(:register_with_password, attrs)
-      |> Realworld.Accounts.create!()
+      |> Ash.create!()
 
     user
   end
