@@ -40,7 +40,7 @@ defmodule RealworldWeb.ArticleLive.Index do
         |> assign(:favorite, favorited(article))
 
       _ ->
-        redirect(socket, to: Routes.page_index_path(socket, :index))
+        redirect(socket, to: ~p"/")
     end
   end
 
@@ -50,7 +50,7 @@ defmodule RealworldWeb.ArticleLive.Index do
     |> Ash.Changeset.for_destroy(:destroy)
     |> Articles.destroy()
 
-    {:noreply, redirect(socket, to: Routes.page_index_path(socket, :index))}
+    {:noreply, redirect(socket, to: ~p"/")}
   end
 
   def handle_event(
@@ -96,11 +96,11 @@ defmodule RealworldWeb.ArticleLive.Index do
   end
 
   def handle_event("favorite-article", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
 
   def handle_event("unfavorite-article", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
 
   def handle_event(
@@ -132,11 +132,11 @@ defmodule RealworldWeb.ArticleLive.Index do
   end
 
   def handle_event("follow-profile", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
 
   def handle_event("unfollow-profile", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
 
   @impl true

@@ -191,10 +191,10 @@ defmodule RealworldWeb.PageLive.Index do
   end
 
   def handle_event("favorite-article", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
 
   def handle_event("unfavorite-article", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
 end

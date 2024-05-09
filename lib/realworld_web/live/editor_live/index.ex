@@ -76,7 +76,7 @@ defmodule RealworldWeb.EditorLive.Index do
         assign(socket, form: form)
 
       _ ->
-        redirect(socket, to: Routes.page_index_path(socket, :index))
+        redirect(socket, to: ~p"/")
     end
 
     # case Accounts.User.get_by_username(username) do

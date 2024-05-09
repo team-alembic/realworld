@@ -20,17 +20,16 @@ defmodule RealworldWeb.AuthLive.AuthForm do
 
   @impl true
   def handle_event("submit", %{"user" => params}, socket) do
-    case Form.submit(socket.assigns.form, params: params, read_one?: true, before_submit: &Ash.Changeset.set_context(&1, %{token_type: :sign_in})) do
+    case Form.submit(socket.assigns.form,
+           params: params,
+           read_one?: true,
+           before_submit: &Ash.Changeset.set_context(&1, %{token_type: :sign_in})
+         ) do
       {:ok, user} ->
-        path =
-          Routes.auth_path(
-            socket.endpoint,
-            {:user, :password,
-             :sign_in_with_token},
-            token: user.__metadata__.token
-          )
-
-        {:noreply, redirect(socket, to: path)}
+        {:noreply,
+         redirect(socket,
+           to: ~p"/auth/user/password/sign_in_with_token?token=#{user.__metadata__.token}"
+         )}
 
       {:error, form} ->
         {:noreply,

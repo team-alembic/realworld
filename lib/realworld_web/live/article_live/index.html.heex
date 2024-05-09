@@ -4,8 +4,8 @@
       <h1><%= @article.title %></h1>
       <.actions
         article={@article}
-        edit_path={Routes.editor_index_path(@socket, :edit, @article.slug)}
-        profile_path={Routes.profile_index_path(@socket, :profile, @article.user.username)}
+        edit_path={~p"/editor/#{@article.slug}"}
+        profile_path={~p"/profile/#{@article.user.username}"}
         is_owner={@is_owner}
         is_following={!is_nil(@following)}
         is_favorited={!is_nil(@favorite)}
@@ -32,8 +32,8 @@
     <div class="article-actions">
       <.actions
         article={@article}
-        edit_path={Routes.editor_index_path(@socket, :edit, @article.slug)}
-        profile_path={Routes.profile_index_path(@socket, :profile, @article.user.username)}
+        edit_path={~p"/editor/#{@article.slug}"}
+        profile_path={~p"/profile/#{@article.user.username}"}
         is_owner={@is_owner}
         is_following={!is_nil(@following)}
         is_favorited={!is_nil(@favorite)}

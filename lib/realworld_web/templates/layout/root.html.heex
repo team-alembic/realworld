@@ -8,12 +8,12 @@
     <.live_title suffix="· Phoenix Framework">
       <%= assigns[:page_title] || "Conduit" %>
     </.live_title>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} />
+    <link phx-track-static rel="stylesheet" href={static_path(@conn, "/assets/app.css")} />
     <script
       defer
       phx-track-static
       type="text/javascript"
-      src={Routes.static_path(@conn, "/assets/app.js")}
+      src={static_path(@conn, "/assets/app.js")}
     >
     </script>
     <link
@@ -32,18 +32,18 @@
     <header>
       <nav class="navbar navbar-light">
         <div class="container">
-          <a class="navbar-brand" href={Routes.page_index_path(@conn, :index)}>conduit</a>
+          <a class="navbar-brand" href={~p"/"}>conduit</a>
           <ul class="nav navbar-nav pull-xs-right">
             <li class="nav-item">
-              <.nav_link href={Routes.page_index_path(@conn, :index)} path_info={@conn.path_info}>
+              <.nav_link href={~p"/"} path_info={@conn.path_info}>
                 Home
               </.nav_link>
             </li>
 
-            <%= if @conn.assigns.current_user do %>
+            <%= if @current_user do %>
               <li class="nav-item">
                 <.nav_link
-                  href={Routes.editor_index_path(@conn, :new)}
+                  href={~p"/editor"}
                   path_info={@conn.path_info}
                 >
                   <i class="ion-compose"></i>&nbsp;New Article
@@ -51,7 +51,7 @@
               </li>
               <li class="nav-item">
                 <.nav_link
-                  href={Routes.settings_index_path(@conn, :index)}
+                  href={~p"/settings"}
                   path_info={@conn.path_info}
                 >
                   <i class="ion-gear-a"></i>&nbsp;Settings
@@ -59,23 +59,17 @@
               </li>
               <li class="nav-item">
                 <.nav_link
-                  href={
-                    Routes.profile_index_path(
-                      @conn,
-                      :profile,
-                      @conn.assigns.current_user.username
-                    )
-                  }
+                  href={~p"/profile/#{@current_user.username}"}
                   path_info={@conn.path_info}
                 >
                   <img class="user-pic" src={@conn.assigns.current_user.image} loading="lazy" />
-                  <%= @conn.assigns.current_user.username %>
+                  <%= @current_user.username %>
                 </.nav_link>
               </li>
             <% else %>
               <li class="nav-item">
                 <.nav_link
-                  href={Routes.auth_index_path(@conn, :login)}
+                  href={~p"/login"}
                   path_info={@conn.path_info}
                 >
                   Sign in
@@ -83,7 +77,7 @@
               </li>
               <li class="nav-item">
                 <.nav_link
-                  href={Routes.auth_index_path(@conn, :register)}
+                  href={~p"/register"}
                   path_info={@conn.path_info}
                 >
                   Sign up

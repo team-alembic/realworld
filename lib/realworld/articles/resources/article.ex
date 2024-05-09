@@ -151,16 +151,19 @@ defmodule Realworld.Articles.Article do
     end
 
     many_to_many :tags, Realworld.Articles.Tag do
+      api Realworld.Articles
       through Realworld.Articles.ArticleTag
       source_attribute_on_join_resource :article_id
       destination_attribute_on_join_resource :tag_id
     end
 
-    has_many :favorite_links, Realworld.Articles.Favorite
+    has_many :favorite_links, Realworld.Articles.Favorite do
+      api Realworld.Articles
+    end
 
     many_to_many :favorites, Realworld.Accounts.User do
       api Realworld.Accounts
-      through Realworld.Articles.Favorite
+      join_relationship :favorite_links
       source_attribute_on_join_resource :article_id
       destination_attribute_on_join_resource :user_id
     end
