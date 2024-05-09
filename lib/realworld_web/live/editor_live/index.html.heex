@@ -48,8 +48,7 @@
                 phx-hook="TagInput"
               />
               <div class="tag-list">
-                <%= for tag_form <- inputs_for(f, :tags) do %>
-                  <%= hidden_inputs_for(tag_form) %>
+                <.inputs_for :let={tag_form} field={f[:tags]}>
                   <%= hidden_input(tag_form, :name) %>
                   <span class="tag-default tag-pill">
                     <i
@@ -60,7 +59,7 @@
                     </i>
                     <%= " #{AshPhoenix.Form.value(tag_form, :name)} " %>
                   </span>
-                <% end %>
+                </.inputs_for>
               </div>
             </fieldset>
             <%= submit("Publish Article", class: "btn btn-lg pull-xs-right btn-primary") %>

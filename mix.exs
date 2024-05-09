@@ -32,26 +32,28 @@ defmodule Realworld.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.6.15"},
-      {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.18.11"},
+      {:phoenix, "~> 1.7"},
+      {:phoenix_html, "~> 4.1"},
+      {:phoenix_html_helpers, "~> 1.0"},
+      {:phoenix_live_dashboard, "~> 0.8"},
+      {:phoenix_live_reload, "~> 1.5", only: :dev},
+      {:phoenix_live_view, "~> 0.20"},
+      {:phoenix_view, "~> 2.0"},
       {:floki, ">= 0.30.0", only: :test},
-      {:phoenix_live_dashboard, "~> 0.6"},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
-      {:swoosh, "~> 1.3"},
-      {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.18"},
-      {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"},
-      {:ash, "~> 2.6"},
-      {:ash_postgres, "~> 1.3"},
-      {:ash_authentication, "~> 3.7"},
-      {:ash_authentication_phoenix, "~> 1.4"},
-      {:slugify, "~> 1.3.1"},
-      {:earmark, "~> 1.4.36"},
-      {:faker, "~> 0.17", only: :test}
+      {:swoosh, "~> 1.16"},
+      {:telemetry_metrics, "~> 1.0"},
+      {:telemetry_poller, "~> 1.1"},
+      {:gettext, "~> 0.24"},
+      {:jason, "~> 1.4"},
+      {:plug_cowboy, "~> 2.7"},
+      {:ash, "~> 2.21"},
+      {:ash_postgres, "~> 1.5"},
+      {:ash_authentication, "~> 3.12"},
+      {:ash_authentication_phoenix, "~> 1.9"},
+      {:slugify, "~> 1.3"},
+      {:earmark, "~> 1.4"},
+      {:faker, "~> 0.18", only: :test}
     ]
   end
 

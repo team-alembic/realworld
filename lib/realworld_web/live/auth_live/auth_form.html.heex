@@ -8,13 +8,7 @@
       <% end %>
     <% end %>
   </ul>
-  <.form
-    :let={f}
-    for={@form}
-    phx-change="validate"
-    phx-submit="submit"
-    phx-target={@myself}
-  >
+  <.form :let={f} for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself}>
     <%= if @live_action in [:register] do %>
       <fieldset class="form-group">
         <%= text_input(f, :username,

@@ -34,15 +34,15 @@ defmodule RealworldWeb.ProfileLive.Index do
 
   @impl true
   def handle_event("edit-profile", _, socket) do
-    {:noreply, redirect(socket, to: Routes.settings_index_path(socket, :index))}
+    {:noreply, redirect(socket, to: ~p"/settings")}
   end
 
   def handle_event("follow-profile", _, %{assigns: %{current_user: nil}} = socket) do
-    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
 
   def handle_event("unfollow-profile", _, %{assigns: %{current_user: nil}} = socket) do
-    {:noreply, redirect(socket, to: Routes.auth_index_path(socket, :login))}
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
 
   def handle_event(

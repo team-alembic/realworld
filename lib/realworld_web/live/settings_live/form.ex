@@ -34,8 +34,7 @@ defmodule RealworldWeb.SettingsLive.Form do
   defp submit_form(%{valid?: true} = form, socket) do
     case Form.submit(form) do
       {:ok, user} ->
-        {:noreply,
-         redirect(socket, to: Routes.profile_index_path(socket, :profile, user.username))}
+        {:noreply, redirect(socket, to: ~p"/profile/#{user.username}")}
 
       {:error, form} ->
         assign(socket, :form, form)

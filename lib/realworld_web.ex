@@ -16,6 +16,9 @@ defmodule RealworldWeb do
   below. Instead, define any helper function in modules
   and import those modules here.
   """
+  def static_paths do
+    ~w(assets fonts images favicon.ico robots.txt)
+  end
 
   def controller do
     quote do
@@ -24,7 +27,7 @@ defmodule RealworldWeb do
       import Plug.Conn
       import RealworldWeb.Gettext
       import Phoenix.LiveView.Controller
-      alias RealworldWeb.Router.Helpers, as: Routes
+      unquote(verified_routes())
     end
   end
 
@@ -89,19 +92,29 @@ defmodule RealworldWeb do
 
   defp view_helpers do
     quote do
-      # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
-
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.Component
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
+      import Phoenix.HTML
+      import Phoenix.HTML.Form
+      use PhoenixHTMLHelpers
+
       import RealworldWeb.ErrorHelpers
       import RealworldWeb.Gettext
-      alias RealworldWeb.Router.Helpers, as: Routes
       import RealworldWeb.LiveHelpers
+      unquote(verified_routes())
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: RealworldWeb.Endpoint,
+        router: RealworldWeb.Router,
+        statics: RealworldWeb.static_paths()
     end
   end
 

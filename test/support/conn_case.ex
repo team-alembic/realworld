@@ -19,12 +19,12 @@ defmodule RealworldWeb.ConnCase do
 
   using do
     quote do
+      use RealworldWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import RealworldWeb.ConnCase
-
-      alias RealworldWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
       @endpoint RealworldWeb.Endpoint

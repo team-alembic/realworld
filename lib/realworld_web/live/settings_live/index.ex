@@ -18,6 +18,6 @@ defmodule RealworldWeb.SettingsLive.Index do
 
   @impl true
   def handle_event("logout", _, socket) do
-    {:noreply, redirect(socket, to: Routes.auth_path(socket, :sign_out))}
+    {:noreply, redirect(socket, to: ~p"/sign-out")}
   end
 end
