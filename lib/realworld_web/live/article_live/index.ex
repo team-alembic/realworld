@@ -4,17 +4,12 @@ defmodule RealworldWeb.ArticleLive.Index do
   import RealworldWeb.ArticleLive.Actions, only: [actions: 1]
 
   alias Ash.Query
-  alias Realworld.Articles
   alias Realworld.Profiles
   alias Realworld.Articles.{Article, Comment, Favorite}
   alias Realworld.Accounts.User
 
   @impl true
   def mount(_params, _session, socket) do
-    if socket.assigns[:current_user] do
-      Ash.set_actor(socket.assigns[:current_user])
-    end
-
     {:ok, socket}
   end
 
@@ -31,7 +26,7 @@ defmodule RealworldWeb.ArticleLive.Index do
   end
 
   defp apply_action(socket, :index, %{"slug" => slug}) do
-    case get_article_by_slug(slug) do
+    case get_article_by_slug(slug, socket.assigns.current_user) do
       {:ok, article} ->
         socket
         |> assign(:article, article)
@@ -48,7 +43,7 @@ defmodule RealworldWeb.ArticleLive.Index do
   def handle_event("delete-article", _params, socket) do
     socket.assigns.article
     |> Ash.Changeset.for_destroy(:destroy)
-    |> Articles.destroy()
+    |> Ash.destroy()
 
     {:noreply, redirect(socket, to: ~p"/")}
   end
@@ -79,7 +74,7 @@ defmodule RealworldWeb.ArticleLive.Index do
         _,
         %{assigns: %{current_user: _current_user, article: article, favorite: favorite}} = socket
       ) do
-    case Articles.destroy(favorite) do
+    case Ash.destroy(favorite) do
       :ok ->
         article = Map.put(article, :favorites_count, article.favorites_count - 1)
 
@@ -122,7 +117,7 @@ defmodule RealworldWeb.ArticleLive.Index do
         _,
         %{assigns: %{current_user: _current_user, following: following}} = socket
       ) do
-    case Profiles.destroy(following) do
+    case Ash.destroy(following) do
       :ok ->
         {:noreply, assign(socket, following: nil)}
 
@@ -169,20 +164,14 @@ defmodule RealworldWeb.ArticleLive.Index do
     {:noreply, socket}
   end
 
-  defp get_article_by_slug(slug) do
+  defp get_article_by_slug(slug, current_user) do
     comment_user_query = User |> Query.select([:username, :image, :created_at])
 
     comments_query =
       Comment |> Query.sort(created_at: :asc) |> Query.load(user: comment_user_query)
 
     slug
-    |> Article.get_by_slug()
-    |> Articles.load([
-      :user,
-      :tags,
-      :favorites_count,
-      comments: comments_query
-    ])
+    |> Article.get_by_slug(actor: current_user, load: [:user, :tags, :favorites_count, comments: comments_query])
   end
 
   defp is_owner?(nil, _), do: false

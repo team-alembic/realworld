@@ -2,14 +2,12 @@ defmodule RealworldWeb.ArticleLive.CommentsComponent do
   use RealworldWeb, :live_component
 
   alias AshPhoenix.Form
-  alias Realworld.Articles
   alias Realworld.Articles.Comment
 
   def update(assigns, socket) do
     # ? should this go here or in the parent?
     form =
       Form.for_create(Comment, :create,
-        api: Realworld.Articles,
         as: "comment",
         forms: [auto?: true]
       )
@@ -41,7 +39,7 @@ defmodule RealworldWeb.ArticleLive.CommentsComponent do
   def handle_event("delete-comment", %{"id" => id}, socket) do
     comment = Enum.find(socket.assigns.comments, &(&1.id == id))
 
-    Articles.destroy(comment)
+    Ash.destroy(comment)
 
     {:noreply, socket}
   end

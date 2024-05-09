@@ -6,10 +6,6 @@ defmodule RealworldWeb.ProfileLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    if socket.assigns[:current_user] do
-      Ash.set_actor(socket.assigns[:current_user])
-    end
-
     socket =
       socket
       |> assign(:page_offset, 0)
@@ -48,9 +44,9 @@ defmodule RealworldWeb.ProfileLive.Index do
   def handle_event(
         "follow-profile",
         _,
-        %{assigns: %{current_user: _current_user, profile_user: profile_user}} = socket
+        %{assigns: %{current_user: current_user, profile_user: profile_user}} = socket
       ) do
-    case Profiles.Follow.create_following(profile_user.id) do
+    case Profiles.Follow.create_following(profile_user.id, actor: current_user) do
       {:ok, follow} ->
         {:noreply, assign(socket, following: follow)}
 
@@ -62,9 +58,9 @@ defmodule RealworldWeb.ProfileLive.Index do
   def handle_event(
         "unfollow-profile",
         _,
-        %{assigns: %{following: following}} = socket
+        %{assigns: %{current_user: current_user, following: following}} = socket
       ) do
-    case Profiles.destroy(following) do
+    case Ash.destroy(following, actor: current_user) do
       :ok ->
         {:noreply, assign(socket, following: nil)}
 
@@ -100,7 +96,7 @@ defmodule RealworldWeb.ProfileLive.Index do
          {:ok, page} <-
            Article.list_articles(
              construct_filter(socket.assigns.active_view, user),
-             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
+             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset], actor: current_user
            ) do
       socket
       |> assign(:articles, page.results)

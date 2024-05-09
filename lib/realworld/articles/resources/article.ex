@@ -1,7 +1,8 @@
 defmodule Realworld.Articles.Article do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
-    authorizers: [Ash.Policy.Authorizer]
+    authorizers: [Ash.Policy.Authorizer],
+    domain: Realworld.Articles
 
   postgres do
     table "articles"
@@ -27,10 +28,7 @@ defmodule Realworld.Articles.Article do
   end
 
   code_interface do
-    define_for Realworld.Articles
-
     define :get_by_slug, action: :by_slug, args: [:slug]
-
     define :list_articles, action: :list_articles, args: [{:optional, :filter}]
     define :list_articles_feed, action: :list_articles_feed
   end
@@ -82,6 +80,7 @@ defmodule Realworld.Articles.Article do
 
     update :update do
       primary? true
+      require_atomic? false
       accept [:title, :description, :body_raw]
 
       argument :tags, {:array, :map}, allow_nil?: true
@@ -102,23 +101,28 @@ defmodule Realworld.Articles.Article do
 
     attribute :slug, :string do
       allow_nil? false
+      public? true
     end
 
     attribute :title, :string do
       allow_nil? false
+      public? true
     end
 
     attribute :description, :string do
       allow_nil? false
+      public? true
     end
 
     attribute :body_raw, :string do
       allow_nil? false
       default ""
+      public? true
     end
 
     attribute :body, :string do
       allow_nil? false
+      public? true
     end
 
     create_timestamp :created_at
@@ -145,24 +149,19 @@ defmodule Realworld.Articles.Article do
     has_many :comments, Realworld.Articles.Comment
 
     belongs_to :user, Realworld.Accounts.User do
-      api Realworld.Accounts
       writable? true
       allow_nil? false
     end
 
     many_to_many :tags, Realworld.Articles.Tag do
-      api Realworld.Articles
       through Realworld.Articles.ArticleTag
       source_attribute_on_join_resource :article_id
       destination_attribute_on_join_resource :tag_id
     end
 
-    has_many :favorite_links, Realworld.Articles.Favorite do
-      api Realworld.Articles
-    end
+    has_many :favorite_links, Realworld.Articles.Favorite
 
     many_to_many :favorites, Realworld.Accounts.User do
-      api Realworld.Accounts
       join_relationship :favorite_links
       source_attribute_on_join_resource :article_id
       destination_attribute_on_join_resource :user_id

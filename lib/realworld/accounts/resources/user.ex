@@ -1,7 +1,8 @@
 defmodule Realworld.Accounts.User do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
-    extensions: [AshAuthentication]
+    extensions: [AshAuthentication],
+    domain: Realworld.Accounts
 
   postgres do
     table "users"
@@ -9,8 +10,6 @@ defmodule Realworld.Accounts.User do
   end
 
   code_interface do
-    define_for Realworld.Accounts
-
     define :get_by_username, args: [:username]
   end
 
@@ -29,16 +28,19 @@ defmodule Realworld.Accounts.User do
   end
 
   attributes do
-    uuid_primary_key(:id)
+    uuid_primary_key :id
 
-    attribute(:email, :string, allow_nil?: false)
-    attribute(:username, :string, allow_nil?: false)
-    attribute(:hashed_password, :string, allow_nil?: false, sensitive?: true)
-    attribute(:bio, :string)
-    attribute(:image, :string, default: "https://api.realworld.io/images/smiley-cyrus.jpeg")
+    attribute :email, :string, allow_nil?: false, public?: true
+    attribute :username, :string, allow_nil?: false, public?: true
+    attribute :hashed_password, :string, allow_nil?: false, sensitive?: true
+    attribute :bio, :string, public?: true
 
-    create_timestamp(:created_at)
-    update_timestamp(:updated_at)
+    attribute :image, :string,
+      default: "https://api.realworld.io/images/smiley-cyrus.jpeg",
+      public?: true
+
+    create_timestamp :created_at
+    update_timestamp :updated_at
   end
 
   identities do
@@ -47,8 +49,6 @@ defmodule Realworld.Accounts.User do
   end
 
   authentication do
-    api Realworld.Accounts
-
     strategies do
       password :password do
         identity_field :email

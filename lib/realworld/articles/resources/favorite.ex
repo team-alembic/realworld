@@ -1,7 +1,8 @@
 defmodule Realworld.Articles.Favorite do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
-    authorizers: [Ash.Policy.Authorizer]
+    authorizers: [Ash.Policy.Authorizer],
+    domain: Realworld.Articles
 
   postgres do
     table "favorites"
@@ -32,8 +33,6 @@ defmodule Realworld.Articles.Favorite do
   end
 
   code_interface do
-    define_for Realworld.Articles
-
     define :favorite, action: :add_favorite, args: [:article]
     define :unfavorite, action: :remove_favorite, args: [:article]
     define :favorited, action: :favorited, args: [:article_id]
@@ -53,7 +52,9 @@ defmodule Realworld.Articles.Favorite do
     create :add_favorite do
       primary? true
 
-      argument :article, Realworld.Articles.Article, allow_nil?: false
+      argument :article, :struct,
+        allow_nil?: false,
+        constraints: [instance_of: Realworld.Articles.Article]
 
       change relate_actor(:user)
       change manage_relationship(:article, type: :append)
@@ -71,7 +72,6 @@ defmodule Realworld.Articles.Favorite do
 
   relationships do
     belongs_to :user, Realworld.Accounts.User do
-      api Realworld.Accounts
       primary_key? true
       allow_nil? false
     end
