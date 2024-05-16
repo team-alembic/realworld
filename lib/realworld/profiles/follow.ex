@@ -23,14 +23,8 @@ defmodule Realworld.Profiles.Follow do
     end
   end
 
-  code_interface do
-    define :following, args: [:target_id]
-    define :create_following, args: [:target_id]
-    define :list_followings
-  end
-
   actions do
-    defaults [:read, :destroy]
+    defaults [:read]
 
     read :list_followings do
       filter expr(user_id == ^actor(:id))
@@ -46,14 +40,30 @@ defmodule Realworld.Profiles.Follow do
       filter expr(user_id == ^actor(:id) and target_id == ^arg(:target_id))
     end
 
-    create :create_following do
+    create :follow do
       argument :target_id, :uuid do
         allow_nil? false
       end
 
+      upsert? true
+      upsert_identity :unique_follow
+
       change relate_actor(:user)
       change manage_relationship(:target_id, :target, type: :append)
     end
+
+    destroy :unfollow do
+      argument :target_id, :uuid do
+        allow_nil? false
+      end
+
+      change filter(expr(target_id == ^arg(:target_id)))
+      change filter(expr(user_id == ^actor(:id)))
+    end
+  end
+
+  identities do
+    identity :unique_follow, [:target_id, :user_id]
   end
 
   attributes do

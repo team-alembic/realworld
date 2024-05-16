@@ -16,6 +16,7 @@ defmodule Realworld.Articles.Article.Preparations.FilterSortFeed do
     |> filter_by_tag()
     |> filter_by_author()
     |> filter_by_favourited()
+    |> filter_followed(actor)
     |> Ash.Query.sort([created_at: :desc], prepend?: true)
     |> Ash.Query.load([
       :user,
@@ -23,6 +24,14 @@ defmodule Realworld.Articles.Article.Preparations.FilterSortFeed do
       :favorites_count,
       is_favorited: %{actor_id: actor.id}
     ])
+  end
+
+  defp filter_followed(query, actor) do
+    if query.arguments.private_feed? do
+      Ash.Query.filter(query, exists(user.followings, user_id == ^actor.id))
+    else
+      query
+    end
   end
 
   defp filter_by_tag(query) do

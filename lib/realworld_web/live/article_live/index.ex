@@ -4,8 +4,8 @@ defmodule RealworldWeb.ArticleLive.Index do
   import RealworldWeb.ArticleLive.Actions, only: [actions: 1]
 
   alias Ash.Query
-  alias Realworld.Profiles
-  alias Realworld.Articles.{Article, Comment, Favorite}
+  alias Realworld.{Articles, Profiles}
+  alias Realworld.Articles.Comment
   alias Realworld.Accounts.User
 
   @impl true
@@ -41,9 +41,7 @@ defmodule RealworldWeb.ArticleLive.Index do
 
   @impl true
   def handle_event("delete-article", _params, socket) do
-    socket.assigns.article
-    |> Ash.Changeset.for_destroy(:destroy)
-    |> Ash.destroy()
+    Articles.destroy_article!(socket.assigns.article, actor: socket.assigns.current_user)
 
     {:noreply, redirect(socket, to: ~p"/")}
   end
@@ -51,9 +49,9 @@ defmodule RealworldWeb.ArticleLive.Index do
   def handle_event(
         "favorite-article",
         _,
-        %{assigns: %{current_user: _current_user, article: article}} = socket
+        %{assigns: %{article: article}} = socket
       ) do
-    case Favorite.favorite(article) do
+    case Articles.favorite(article.id, actor: socket.assigns.current_user) do
       {:ok, favorite} ->
         article = Map.put(article, :favorites_count, article.favorites_count + 1)
 
@@ -72,10 +70,10 @@ defmodule RealworldWeb.ArticleLive.Index do
   def handle_event(
         "unfavorite-article",
         _,
-        %{assigns: %{current_user: _current_user, article: article, favorite: favorite}} = socket
+        %{assigns: %{current_user: current_user, article: article}} = socket
       ) do
-    case Ash.destroy(favorite) do
-      :ok ->
+    case Articles.unfavorite(article.id, return_destroyed?: true, actor: current_user) do
+      {:ok, _} ->
         article = Map.put(article, :favorites_count, article.favorites_count - 1)
 
         socket =
@@ -101,9 +99,9 @@ defmodule RealworldWeb.ArticleLive.Index do
   def handle_event(
         "follow-profile",
         _,
-        %{assigns: %{current_user: _current_user, article: %{user: user}}} = socket
+        %{assigns: %{current_user: current_user, article: %{user: user}}} = socket
       ) do
-    case Profiles.Follow.create_following(user.id) do
+    case Profiles.follow(user.id, actor: current_user) do
       {:ok, follow} ->
         {:noreply, assign(socket, following: follow)}
 
@@ -115,10 +113,10 @@ defmodule RealworldWeb.ArticleLive.Index do
   def handle_event(
         "unfollow-profile",
         _,
-        %{assigns: %{current_user: _current_user, following: following}} = socket
+        %{assigns: %{current_user: current_user, article: article}} = socket
       ) do
-    case Ash.destroy(following) do
-      :ok ->
+    case Profiles.unfollow(article.user_id, return_destroyed?: true, actor: current_user) do
+      {:ok, _} ->
         {:noreply, assign(socket, following: nil)}
 
       _ ->
@@ -171,7 +169,10 @@ defmodule RealworldWeb.ArticleLive.Index do
       Comment |> Query.sort(created_at: :asc) |> Query.load(user: comment_user_query)
 
     slug
-    |> Article.get_by_slug(actor: current_user, load: [:user, :tags, :favorites_count, comments: comments_query])
+    |> Articles.get_article_by_slug(
+      actor: current_user,
+      load: [:user, :tags, :favorites_count, comments: comments_query]
+    )
   end
 
   defp is_owner?(nil, _), do: false
@@ -180,8 +181,8 @@ defmodule RealworldWeb.ArticleLive.Index do
 
   defp follows(_current_user = nil, _user), do: nil
 
-  defp follows(_current_user, user) do
-    case Profiles.Follow.following(user.id) do
+  defp follows(current_user, user) do
+    case Profiles.following(user.id, actor: current_user) do
       {:ok, follow} -> follow
       _ -> nil
     end
@@ -190,7 +191,7 @@ defmodule RealworldWeb.ArticleLive.Index do
   def favorited(nil, _), do: nil
 
   def favorited(article) do
-    case Favorite.favorited(article.id) do
+    case Articles.favorited(article.id) do
       {:ok, favorite} -> favorite
       _ -> nil
     end

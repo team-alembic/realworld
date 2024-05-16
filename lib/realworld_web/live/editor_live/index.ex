@@ -1,6 +1,7 @@
 defmodule RealworldWeb.EditorLive.Index do
   use RealworldWeb, :live_view
 
+  alias Realworld.Articles
   alias Realworld.Articles.Article
 
   @impl true
@@ -77,19 +78,9 @@ defmodule RealworldWeb.EditorLive.Index do
       _ ->
         redirect(socket, to: ~p"/")
     end
-
-    # case Accounts.User.get_by_username(username) do
-    #   {:ok, user} ->
-    #     socket
-    #     |> assign(:profile_user, user)
-    #     |> assign(:following, is_following?(socket.assigns.current_user, user))
-
-    #   _ ->
-    #     redirect(socket, to: Routes.page_index_path(socket, :index))
-    # end
   end
 
   defp get_article_by_slug(slug) do
-    slug |> Article.get_by_slug() |> Ash.load(:tags)
+    slug |> Articles.get_article_by_slug() |> Ash.load(:tags)
   end
 end

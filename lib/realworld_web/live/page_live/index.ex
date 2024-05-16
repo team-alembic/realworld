@@ -1,6 +1,6 @@
 defmodule RealworldWeb.PageLive.Index do
   use RealworldWeb, :live_view
-  alias Realworld.Articles.{Article, Favorite}
+  alias Realworld.Articles
 
   @impl true
   def mount(_params, _session, socket) do
@@ -43,27 +43,11 @@ defmodule RealworldWeb.PageLive.Index do
     end
   end
 
-  defp list_articles(
-         %{assigns: %{current_user: _current_user, active_view: :global_feed}} = socket
-       ) do
-    Article.list_articles(
-      construct_filter(socket.assigns),
-      page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
-    )
-  end
-
-  defp list_articles(
-         %{assigns: %{current_user: _current_user, active_view: :private_feed}} = socket
-       ) do
-    Article.list_articles_feed(
-      page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
-    )
-  end
-
-  defp list_articles(socket) do
-    Article.list_articles(
-      construct_filter(socket.assigns),
-      page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset]
+  defp list_articles(%{assigns: %{current_user: current_user, active_view: active_view}} = socket) do
+    Articles.list_articles(
+      %{filter: construct_filter(socket.assigns), private_feed?: active_view == :private_feed},
+      page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
+      actor: current_user
     )
   end
 
@@ -124,13 +108,12 @@ defmodule RealworldWeb.PageLive.Index do
   def handle_event(
         "favorite-article",
         %{"article_id" => article_id},
-        %{assigns: %{current_user: _current_user}} = socket
+        %{assigns: %{current_user: current_user}} = socket
       ) do
-    article =
-      socket.assigns.articles
-      |> Enum.find(fn article -> article.id == article_id end)
+    case Articles.favorite(article_id, actor: current_user) do
+      {:ok, %{inserted_at: inserted_at, updated_at: inserted_at}} ->
+        {:noreply, socket}
 
-    case Favorite.favorite(article) do
       {:ok, _favorite} ->
         new_articles =
           socket.assigns.articles
@@ -158,10 +141,10 @@ defmodule RealworldWeb.PageLive.Index do
   def handle_event(
         "unfavorite-article",
         %{"article_id" => article_id},
-        %{assigns: %{current_user: _current_user}} = socket
+        %{assigns: %{current_user: current_user}} = socket
       ) do
-    with {:ok, favorite} <- Favorite.favorited(article_id),
-         :ok <- Ash.destroy(favorite) do
+    with {:ok, _} <-
+           Articles.unfavorite(article_id, actor: current_user, return_destroyed?: true) do
       new_articles =
         socket.assigns.articles
         |> Enum.map(fn article ->

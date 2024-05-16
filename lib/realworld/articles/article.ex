@@ -27,12 +27,6 @@ defmodule Realworld.Articles.Article do
     end
   end
 
-  code_interface do
-    define :get_by_slug, action: :by_slug, args: [:slug]
-    define :list_articles, action: :list_articles, args: [{:optional, :filter}]
-    define :list_articles_feed, action: :list_articles_feed
-  end
-
   actions do
     defaults [:read, :destroy]
 
@@ -45,6 +39,7 @@ defmodule Realworld.Articles.Article do
 
     read :list_articles do
       argument :filter, :map, allow_nil?: true
+      argument :private_feed?, :boolean, allow_nil?: false, default: false
 
       pagination do
         default_limit 20
@@ -53,16 +48,6 @@ defmodule Realworld.Articles.Article do
       end
 
       prepare Realworld.Articles.Article.Preparations.FilterSortFeed
-    end
-
-    read :list_articles_feed do
-      pagination do
-        default_limit 20
-        offset? true
-        countable :by_default
-      end
-
-      prepare Realworld.Articles.Article.Preparations.GlobalFeed
     end
 
     create :publish do

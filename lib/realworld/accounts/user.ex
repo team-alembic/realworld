@@ -9,10 +9,6 @@ defmodule Realworld.Accounts.User do
     repo Realworld.Repo
   end
 
-  code_interface do
-    define :get_by_username, args: [:username]
-  end
-
   actions do
     defaults [:read, :update]
 
@@ -46,6 +42,10 @@ defmodule Realworld.Accounts.User do
   identities do
     identity :unique_email, [:email]
     identity :unique_username, [:username]
+  end
+
+  relationships do
+    has_many :followings, Realworld.Profiles.Follow
   end
 
   authentication do

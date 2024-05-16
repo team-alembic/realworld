@@ -9,7 +9,8 @@ defmodule RealworldWeb.ArticleLive.CommentsComponent do
     form =
       Form.for_create(Comment, :create,
         as: "comment",
-        forms: [auto?: true]
+        forms: [auto?: true],
+        actor: assigns[:current_user]
       )
 
     socket =
@@ -37,9 +38,7 @@ defmodule RealworldWeb.ArticleLive.CommentsComponent do
   end
 
   def handle_event("delete-comment", %{"id" => id}, socket) do
-    comment = Enum.find(socket.assigns.comments, &(&1.id == id))
-
-    Ash.destroy(comment)
+    Realworld.Articles.destroy_comment!(id)
 
     {:noreply, socket}
   end

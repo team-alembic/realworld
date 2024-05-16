@@ -9,7 +9,7 @@ defmodule Realworld.Articles.Tag do
   end
 
   actions do
-    defaults [:create, :read, :destroy]
+    defaults [:read, :destroy, create: [:name]]
   end
 
   attributes do

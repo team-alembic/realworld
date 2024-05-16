@@ -32,12 +32,6 @@ defmodule Realworld.Articles.Favorite do
     end
   end
 
-  code_interface do
-    define :favorite, action: :add_favorite, args: [:article]
-    define :unfavorite, action: :remove_favorite, args: [:article]
-    define :favorited, action: :favorited, args: [:article_id]
-  end
-
   actions do
     defaults [:read]
 
@@ -52,16 +46,18 @@ defmodule Realworld.Articles.Favorite do
     create :add_favorite do
       primary? true
 
-      argument :article, :struct,
-        allow_nil?: false,
-        constraints: [instance_of: Realworld.Articles.Article]
+      upsert? true
+
+      accept [:article_id]
 
       change relate_actor(:user)
-      change manage_relationship(:article, type: :append)
     end
 
     destroy :remove_favorite do
       primary? true
+      argument :article_id, :uuid, allow_nil?: false
+      change filter(expr(article_id == ^arg(:article_id)))
+      change filter(expr(user_id == ^actor(:id)))
     end
   end
 
