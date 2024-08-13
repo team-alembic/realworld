@@ -2,41 +2,41 @@
   <div class="container page">
     <div class="row">
       <div class="col-md-10 offset-md-1 col-xs-12">
-        <%= if @form.submit_errors do %>
+        <%= if @form.source.submit_errors do %>
           <div class="alert alert-danger">
             <h4 class="alert-heading">Oops!</h4>
             <p>Something went wrong. Please check the form and try again.</p>
             <ul class="error-messages">
-              <%= for {field, {message, _}} <- @form.submit_errors do %>
+              <%= for {field, {message, _}} <- @form.source.submit_errors do %>
                 <li><%= "#{field} #{message}" %></li>
               <% end %>
             </ul>
           </div>
         <% end %>
-        <.form :let={f} for={@form} phx-change="validate" phx-submit="save">
-          <%= hidden_inputs_for(f) %>
+        <.simple_form for={@form} phx-change="validate" phx-submit="save">
+          <%= hidden_inputs_for(@form) %>
           <fieldset>
             <fieldset class="form-group">
-              <%= text_input(f, :title,
+              <%= text_input(@form, :title,
                 class: "form-control form-control-lg",
                 placeholder: "Article Title"
               ) %>
-              <%= error_tag(f, :title) %>
+              <%= error_tag(@form, :title) %>
             </fieldset>
             <fieldset class="form-group">
-              <%= text_input(f, :description,
+              <%= text_input(@form, :description,
                 class: "form-control",
                 placeholder: "What's this article about?"
               ) %>
-              <%= error_tag(f, :description) %>
+              <%= error_tag(@form, :description) %>
             </fieldset>
             <fieldset class="form-group">
-              <%= textarea(f, :body_raw,
+              <%= textarea(@form, :body_raw,
                 class: "form-control",
                 rows: 8,
                 placeholder: "Write your article (in markdown)"
               ) %>
-              <%= error_tag(f, :body_raw) %>
+              <%= error_tag(@form, :body_raw) %>
             </fieldset>
             <fieldset class="form-group">
               <input
@@ -48,7 +48,7 @@
                 phx-hook="TagInput"
               />
               <div class="tag-list">
-                <.inputs_for :let={tag_form} field={f[:tags]}>
+                <.inputs_for :let={tag_form} field={@form[:tags]}>
                   <%= hidden_input(tag_form, :name) %>
                   <span class="tag-default tag-pill">
                     <i
@@ -64,7 +64,7 @@
             </fieldset>
             <%= submit("Publish Article", class: "btn btn-lg pull-xs-right btn-primary") %>
           </fieldset>
-        </.form>
+        </.simple_form>
       </div>
     </div>
   </div>

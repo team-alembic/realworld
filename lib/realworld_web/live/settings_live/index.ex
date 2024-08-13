@@ -11,6 +11,7 @@ defmodule RealworldWeb.SettingsLive.Index do
         forms: [auto?: true],
         actor: socket.assigns.current_user
       )
+      |> to_form
 
     {:ok, assign(socket, form: form)}
   end

@@ -42,7 +42,7 @@ defmodule RealworldWeb do
         only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
       # Include shared imports and aliases for views
-      unquote(view_helpers())
+      unquote(html_helpers())
     end
   end
 
@@ -53,7 +53,7 @@ defmodule RealworldWeb do
       use Phoenix.LiveView,
         layout: {RealworldWeb.LayoutView, :live}
 
-      unquote(view_helpers())
+      unquote(html_helpers())
     end
   end
 
@@ -61,7 +61,7 @@ defmodule RealworldWeb do
     quote do
       use Phoenix.LiveComponent
 
-      unquote(view_helpers())
+      unquote(html_helpers())
     end
   end
 
@@ -69,7 +69,7 @@ defmodule RealworldWeb do
     quote do
       use Phoenix.Component
 
-      unquote(view_helpers())
+      unquote(html_helpers())
     end
   end
 
@@ -90,21 +90,30 @@ defmodule RealworldWeb do
     end
   end
 
-  defp view_helpers do
+  defp html_helpers do
     quote do
+      alias Phoenix.LiveView.JS
+
+      # HTML escaping functionality
+      import Phoenix.HTML
+      # Core UI components and translation
+      import RealworldWeb.CoreComponents
+      import RealworldWeb.Gettext
+      # Shortcut for generating JS commands
+
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.Component
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
-
       import Phoenix.HTML
       import Phoenix.HTML.Form
       use PhoenixHTMLHelpers
 
       import RealworldWeb.ErrorHelpers
-      import RealworldWeb.Gettext
       import RealworldWeb.LiveHelpers
+
+      # Routes generation with the ~p sigil
       unquote(verified_routes())
     end
   end

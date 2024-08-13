@@ -12,6 +12,7 @@ defmodule RealworldWeb.ArticleLive.CommentsComponent do
         forms: [auto?: true],
         actor: assigns[:current_user]
       )
+      |> to_form()
 
     socket =
       socket
@@ -38,7 +39,7 @@ defmodule RealworldWeb.ArticleLive.CommentsComponent do
   end
 
   def handle_event("delete-comment", %{"id" => id}, socket) do
-    Realworld.Articles.destroy_comment!(id)
+    Realworld.Articles.destroy_comment!(id, actor: socket.assigns[:current_user])
 
     {:noreply, socket}
   end

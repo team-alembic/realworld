@@ -10,7 +10,7 @@ defmodule Realworld.Accounts.User do
   end
 
   actions do
-    defaults [:read, :update]
+    defaults [:read]
 
     read :get_by_username do
       argument :username, :string do
@@ -20,6 +20,12 @@ defmodule Realworld.Accounts.User do
       get? true
 
       filter expr(username == ^arg(:username))
+    end
+
+    update :update do
+      primary? true
+      require_atomic? false
+      accept [:email, :username, :image, :bio]
     end
   end
 
