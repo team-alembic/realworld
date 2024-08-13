@@ -1,6 +1,6 @@
 <div>
   <ul class="error-messages">
-    <%= if @form.errors do %>
+    <%= if @form.source.errors do %>
       <%= for {k, v} <- @errors do %>
         <li>
           <%= humanize("#{k} #{v}") %>
@@ -8,29 +8,29 @@
       <% end %>
     <% end %>
   </ul>
-  <.form :let={f} for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself}>
+  <.simple_form for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself}>
     <fieldset>
       <fieldset class="form-group">
-        <%= text_input(f, :image,
+        <%= text_input(@form, :image,
           class: "form-control form-control-lg",
           placeholder: "URL of profile picture"
         ) %>
       </fieldset>
       <fieldset class="form-group">
-        <%= text_input(f, :username,
+        <%= text_input(@form, :username,
           class: "form-control form-control-lg",
           placeholder: "Your Name"
         ) %>
       </fieldset>
       <fieldset class="form-group">
-        <%= textarea(f, :bio,
+        <%= textarea(@form, :bio,
           class: "form-control form-control-lg",
           placeholder: "Short bio about you",
           rows: "8"
         ) %>
       </fieldset>
       <fieldset class="form-group">
-        <%= text_input(f, :email,
+        <%= text_input(@form, :email,
           class: "form-control form-control-lg",
           placeholder: "Email"
         ) %>
@@ -38,12 +38,12 @@
       <fieldset class="form-group">
         <%!-- this password field does not update the password --%>
         <%!-- password reset is out of scope for this project --%>
-        <%= password_input(f, :password,
+        <%= password_input(@form, :password,
           class: "form-control form-control-lg",
           placeholder: "Password"
         ) %>
       </fieldset>
       <%= submit("Update Settings", class: "btn btn-lg btn-primary pull-xs-right") %>
     </fieldset>
-  </.form>
+  </.simple_form>
 </div>
