@@ -32,7 +32,7 @@ defmodule RealworldWeb.EditorLive.Index do
 
   def handle_event("add_tag", %{"tag" => tag}, socket) do
     tag = String.trim(tag)
-    tags = socket.assigns.form.forms[:tags] || []
+    tags = socket.assigns.form.source.forms[:tags] || []
 
     case Enum.any?(tags, fn t -> AshPhoenix.Form.value(t, :name) == tag end) do
       true ->
@@ -58,6 +58,7 @@ defmodule RealworldWeb.EditorLive.Index do
           auto?: true
         ]
       )
+      |> to_form
 
     assign(socket, form: form)
   end
@@ -72,6 +73,7 @@ defmodule RealworldWeb.EditorLive.Index do
               auto?: true
             ]
           )
+          |> to_form
 
         assign(socket, form: form)
 
