@@ -13,7 +13,7 @@
             </ul>
           </div>
         <% end %>
-        <.form for={@form} phx-change="validate" phx-submit="save">
+        <.simple_form for={@form} phx-change="validate" phx-submit="save">
           <%= hidden_inputs_for(@form) %>
           <fieldset>
             <fieldset class="form-group">
@@ -64,7 +64,7 @@
             </fieldset>
             <%= submit("Publish Article", class: "btn btn-lg pull-xs-right btn-primary") %>
           </fieldset>
-        </.form>
+        </.simple_form>
       </div>
     </div>
   </div>

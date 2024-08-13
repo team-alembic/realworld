@@ -6,26 +6,25 @@
   </p>
 
   <div :if={@current_user}>
-    <.form
-      :let={f}
+    <.simple_form
       for={@form}
       class="card comment-form"
       phx-submit="post-comment"
       phx-target={@myself}
     >
       <div class="card-block">
-        <%= textarea(f, :body,
+        <%= textarea(@form, :body,
           class: "form-control",
           placeholder: "Write a comment...",
           rows: 3
         ) %>
-        <%= error_tag(f, :body) %>
+        <%= error_tag(@form, :body) %>
       </div>
       <div class="card-footer">
         <img src={@current_user.image} class="comment-author-img" />
         <%= submit("Post Comment", class: "btn btn-sm btn-primary") %>
       </div>
-    </.form>
+    </.simple_form>
   </div>
 
   <div :for={comment <- @comments} class="card" id={comment.id}>

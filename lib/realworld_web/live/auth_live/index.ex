@@ -23,7 +23,7 @@ defmodule RealworldWeb.AuthLive.Index do
     |> assign(:action, ~p"/auth/user/password/register")
     |> assign(
       :form,
-      Form.for_create(User, :register_with_password, as: "user")
+      User |> Form.for_create(:register_with_password, as: "user") |> to_form()
     )
   end
 
@@ -36,7 +36,7 @@ defmodule RealworldWeb.AuthLive.Index do
     |> assign(:action, ~p"/auth/user/password/sign_in")
     |> assign(
       :form,
-      Form.for_action(User, :sign_in_with_password, as: "user")
+      User |> Form.for_action(:sign_in_with_password, as: "user") |> to_form()
     )
   end
 end

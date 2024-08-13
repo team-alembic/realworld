@@ -8,27 +8,27 @@
       <% end %>
     <% end %>
   </ul>
-  <.form :let={f} for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself}>
+  <.simple_form for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself}>
     <%= if @live_action in [:register] do %>
       <fieldset class="form-group">
-        <%= text_input(f, :username,
+        <%= text_input(@form, :username,
           class: "form-control form-control-lg",
           placeholder: "Your Name"
         ) %>
       </fieldset>
     <% end %>
     <fieldset class="form-group">
-      <%= text_input(f, :email,
+      <%= text_input(@form, :email,
         class: "form-control form-control-lg",
         placeholder: "Email"
       ) %>
     </fieldset>
     <fieldset class="form-group">
-      <%= password_input(f, :password,
+      <%= password_input(@form, :password,
         class: "form-control form-control-lg",
         placeholder: "Password"
       ) %>
     </fieldset>
     <%= submit(@cta, class: "btn btn-lg btn-primary pull-xs-right") %>
-  </.form>
+  </.simple_form>
 </div>
