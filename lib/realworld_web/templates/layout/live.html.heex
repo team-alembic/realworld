@@ -6,14 +6,14 @@
       phx-click="lv:clear-flash"
       phx-value-key="info"
       phx-no-format
-    ><%= live_flash(@flash, :info) %></p>
+    ><%= Phoenix.Flash.get(@flash, :info) %></p>
     <p
       class="alert alert-danger"
       role="alert"
       phx-click="lv:clear-flash"
       phx-value-key="error"
       phx-no-format
-    ><%= live_flash(@flash, :error) %></p>
+    ><%= Phoenix.Flash.get(@flash, :error) %></p>
   </div>
   <%= @inner_content %>
 </main>
