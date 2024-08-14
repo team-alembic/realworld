@@ -7,7 +7,7 @@ defmodule Realworld.Articles do
 
   resources do
     resource Realworld.Articles.Article do
-      define :get_article_by_slug, action: :by_slug, args: [:slug]
+      define :get_article_by_slug, action: :read, get_by: :slug
       define :list_articles
       define :destroy_article, action: :destroy
     end
