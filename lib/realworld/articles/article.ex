@@ -30,13 +30,6 @@ defmodule Realworld.Articles.Article do
   actions do
     defaults [:read, :destroy]
 
-    read :by_slug do
-      get? true
-      argument :slug, :string, allow_nil?: false
-
-      filter expr(slug == ^arg(:slug))
-    end
-
     read :list_articles do
       argument :filter, :map, allow_nil?: true
       argument :private_feed?, :boolean, allow_nil?: false, default: false
