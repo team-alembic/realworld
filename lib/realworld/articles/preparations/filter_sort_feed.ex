@@ -28,7 +28,7 @@ defmodule Realworld.Articles.Article.Preparations.FilterSortFeed do
 
   defp filter_followed(query, actor) do
     if query.arguments.private_feed? do
-      Ash.Query.filter(query, exists(user.followings, user_id == ^actor.id))
+      Ash.Query.filter(query, exists(user.followers, user_id == ^actor.id))
     else
       query
     end

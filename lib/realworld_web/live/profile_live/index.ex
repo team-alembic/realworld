@@ -157,6 +157,53 @@ defmodule RealworldWeb.ProfileLive.Index do
     {:noreply, redirect(socket, to: ~p"/login")}
   end
 
+  @impl true
+  def handle_info(
+        %Phoenix.Socket.Broadcast{
+          topic: "favorite:destroyed:" <> article_id,
+          payload: %{from: from}
+        },
+        socket
+      ) do
+    if from == self() do
+      {:noreply, socket}
+    else
+      articles =
+        Enum.map(socket.assigns.articles, fn article ->
+          if article.id == article_id do
+            %{article | favorites_count: max(article.favorites_count - 1, 0)}
+          else
+            article
+          end
+        end)
+
+      {:noreply, assign(socket, :articles, articles)}
+    end
+  end
+
+  def handle_info(
+        %Phoenix.Socket.Broadcast{
+          topic: "favorite:created:" <> article_id,
+          payload: %{from: from}
+        },
+        socket
+      ) do
+    if from == self() do
+      {:noreply, socket}
+    else
+      articles =
+        Enum.map(socket.assigns.articles, fn article ->
+          if article.id == article_id do
+            %{article | favorites_count: article.favorites_count + 1}
+          else
+            article
+          end
+        end)
+
+      {:noreply, assign(socket, :articles, articles)}
+    end
+  end
+
   defp apply_action(%{assigns: %{current_user: current_user}} = socket, :profile, %{
          "username" => username
        }) do
@@ -167,6 +214,13 @@ defmodule RealworldWeb.ProfileLive.Index do
              page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
              actor: current_user
            ) do
+      if connected?(socket) do
+        Enum.each(page.results, fn article ->
+          RealworldWeb.Endpoint.subscribe("favorite:created:#{article.id}")
+          RealworldWeb.Endpoint.subscribe("favorite:destroyed:#{article.id}")
+        end)
+      end
+
       socket
       |> assign(:articles, page.results)
       |> assign(:pages, ceil(page.count / socket.assigns.page_limit))

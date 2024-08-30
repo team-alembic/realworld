@@ -42,18 +42,12 @@
 
             <%= if @current_user do %>
               <li class="nav-item">
-                <.nav_link
-                  href={~p"/editor"}
-                  path_info={@conn.path_info}
-                >
+                <.nav_link href={~p"/editor"} path_info={@conn.path_info}>
                   <i class="ion-compose"></i>&nbsp;New Article
                 </.nav_link>
               </li>
               <li class="nav-item">
-                <.nav_link
-                  href={~p"/settings"}
-                  path_info={@conn.path_info}
-                >
+                <.nav_link href={~p"/settings"} path_info={@conn.path_info}>
                   <i class="ion-gear-a"></i>&nbsp;Settings
                 </.nav_link>
               </li>
@@ -68,18 +62,12 @@
               </li>
             <% else %>
               <li class="nav-item">
-                <.nav_link
-                  href={~p"/login"}
-                  path_info={@conn.path_info}
-                >
+                <.nav_link href={~p"/login"} path_info={@conn.path_info}>
                   Sign in
                 </.nav_link>
               </li>
               <li class="nav-item">
-                <.nav_link
-                  href={~p"/register"}
-                  path_info={@conn.path_info}
-                >
+                <.nav_link href={~p"/register"} path_info={@conn.path_info}>
                   Sign up
                 </.nav_link>
               </li>

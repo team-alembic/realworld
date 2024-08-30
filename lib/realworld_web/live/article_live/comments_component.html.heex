@@ -34,17 +34,11 @@
       </p>
     </div>
     <div class="card-footer">
-      <a
-        href={~p"/profile/#{comment.user.username}"}
-        class="comment-author"
-      >
+      <a href={~p"/profile/#{comment.user.username}"} class="comment-author">
         <img src={comment.user.image} class="comment-author-img" />
       </a>
       &nbsp;
-      <a
-        href={~p"/profile/#{comment.user.username}"}
-        class="comment-author"
-      >
+      <a href={~p"/profile/#{comment.user.username}"} class="comment-author">
         <%= comment.user.username %>
       </a>
       <span class="date-posted"><%= Calendar.strftime(comment.created_at, "%B %d, %Y") %></span>

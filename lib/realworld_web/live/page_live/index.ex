@@ -33,6 +33,11 @@ defmodule RealworldWeb.PageLive.Index do
   defp apply_action(socket, :index, _params) do
     with {:ok, page} <- list_articles(socket),
          {:ok, tags} <- Realworld.Articles.Tag |> Realworld.Articles.read() do
+      Enum.each(page.results, fn article ->
+        RealworldWeb.Endpoint.subscribe("favorite:created:#{article.id}")
+        RealworldWeb.Endpoint.subscribe("favorite:destroyed:#{article.id}")
+      end)
+
       socket
       |> assign(:articles, page.results)
       |> assign(:pages, ceil(page.count / socket.assigns.page_limit))
@@ -82,6 +87,53 @@ defmodule RealworldWeb.PageLive.Index do
   def active_class(_on_page, _active_page), do: ""
 
   @impl true
+  def handle_info(
+        %Phoenix.Socket.Broadcast{
+          topic: "favorite:destroyed:" <> article_id,
+          payload: %{from: from}
+        },
+        socket
+      ) do
+    if from == self() do
+      {:noreply, socket}
+    else
+      articles =
+        Enum.map(socket.assigns.articles, fn article ->
+          if article.id == article_id do
+            %{article | favorites_count: max(article.favorites_count - 1, 0)}
+          else
+            article
+          end
+        end)
+
+      {:noreply, assign(socket, :articles, articles)}
+    end
+  end
+
+  def handle_info(
+        %Phoenix.Socket.Broadcast{
+          topic: "favorite:created:" <> article_id,
+          payload: %{from: from}
+        },
+        socket
+      ) do
+    if from == self() do
+      {:noreply, socket}
+    else
+      articles =
+        Enum.map(socket.assigns.articles, fn article ->
+          if article.id == article_id do
+            %{article | favorites_count: article.favorites_count + 1}
+          else
+            article
+          end
+        end)
+
+      {:noreply, assign(socket, :articles, articles)}
+    end
+  end
+
+  @impl true
   def handle_event("global-feed", _params, socket) do
     socket =
       socket
@@ -111,10 +163,7 @@ defmodule RealworldWeb.PageLive.Index do
         %{assigns: %{current_user: current_user}} = socket
       ) do
     case Articles.favorite(article_id, actor: current_user) do
-      {:ok, %{inserted_at: inserted_at, updated_at: inserted_at}} ->
-        {:noreply, socket}
-
-      {:ok, _favorite} ->
+      {:ok, favorite} when favorite.created_at == favorite.updated_at ->
         new_articles =
           socket.assigns.articles
           |> Enum.map(fn article ->
@@ -133,7 +182,8 @@ defmodule RealworldWeb.PageLive.Index do
 
         {:noreply, socket}
 
-      _ ->
+      res ->
+      IO.inspect(res)
         {:noreply, socket}
     end
   end

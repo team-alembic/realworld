@@ -52,6 +52,10 @@ defmodule Realworld.Accounts.User do
 
   relationships do
     has_many :followings, Realworld.Profiles.Follow
+
+    has_many :followers, Realworld.Profiles.Follow do
+      destination_attribute :target_id
+    end
   end
 
   authentication do

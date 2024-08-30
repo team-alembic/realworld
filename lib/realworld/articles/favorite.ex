@@ -2,6 +2,7 @@ defmodule Realworld.Articles.Favorite do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     authorizers: [Ash.Policy.Authorizer],
+    notifiers: Ash.Notifier.PubSub,
     domain: Realworld.Articles
 
   postgres do
@@ -12,6 +13,14 @@ defmodule Realworld.Articles.Favorite do
       reference :user, on_delete: :delete
       reference :article, on_delete: :delete
     end
+  end
+
+  pub_sub do
+    module RealworldWeb.Endpoint
+    prefix "favorite"
+
+    publish_all :create, ["created", :article_id]
+    publish_all :destroy, ["destroyed", :article_id]
   end
 
   policies do
@@ -45,8 +54,8 @@ defmodule Realworld.Articles.Favorite do
 
     create :add_favorite do
       primary? true
-
       upsert? true
+      upsert_identity :unique_favorite
 
       accept [:article_id]
 
@@ -64,6 +73,10 @@ defmodule Realworld.Articles.Favorite do
   attributes do
     create_timestamp :created_at
     update_timestamp :updated_at
+  end
+
+  identities do
+    identity :unique_favorite, [:user_id, :article_id]
   end
 
   relationships do
