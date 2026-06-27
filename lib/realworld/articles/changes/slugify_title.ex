@@ -12,7 +12,7 @@ defmodule Realworld.Articles.Changes.SlugifyTitle do
   defp maybe_slugify_title(changeset) do
     case Changeset.get_attribute(changeset, :title) do
       title when is_binary(title) ->
-        Changeset.change_attribute(changeset, :slug, Slug.slugify(title))
+        Changeset.force_change_attribute(changeset, :slug, Slug.slugify(title))
 
       _ ->
         changeset
