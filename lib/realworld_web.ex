@@ -22,10 +22,13 @@ defmodule RealworldWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: RealworldWeb
+      use Phoenix.Controller,
+        formats: [html: "View", json: "View"]
+
+      plug :put_layout, html: RealworldWeb.LayoutView
 
       import Plug.Conn
-      import RealworldWeb.Gettext
+      use Gettext, backend: RealworldWeb.Gettext
       import Phoenix.LiveView.Controller
       unquote(verified_routes())
     end
@@ -86,7 +89,7 @@ defmodule RealworldWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import RealworldWeb.Gettext
+      use Gettext, backend: RealworldWeb.Gettext
     end
   end
 
@@ -98,7 +101,7 @@ defmodule RealworldWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import RealworldWeb.CoreComponents
-      import RealworldWeb.Gettext
+      use Gettext, backend: RealworldWeb.Gettext
       # Shortcut for generating JS commands
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)

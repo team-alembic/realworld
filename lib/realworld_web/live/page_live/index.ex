@@ -32,7 +32,7 @@ defmodule RealworldWeb.PageLive.Index do
 
   defp apply_action(socket, :index, _params) do
     with {:ok, page} <- list_articles(socket),
-         {:ok, tags} <- Realworld.Articles.Tag |> Realworld.Articles.read() do
+         {:ok, tags} <- Realworld.Articles.Tag |> Ash.read() do
       Enum.each(page.results, fn article ->
         RealworldWeb.Endpoint.subscribe("favorite:created:#{article.id}")
         RealworldWeb.Endpoint.subscribe("favorite:destroyed:#{article.id}")

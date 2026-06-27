@@ -20,7 +20,7 @@ defmodule RealworldWeb.Router do
   scope "/", RealworldWeb do
     pipe_through :browser
 
-    auth_routes_for Realworld.Accounts.User, to: AuthController
+    auth_routes AuthController, Realworld.Accounts.User, path: "/auth"
 
     # TODO: should we move these into the live session?
     live "/login", AuthLive.Index, :login

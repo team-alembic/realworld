@@ -17,7 +17,7 @@ defmodule RealworldWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import RealworldWeb.Gettext
+  use Gettext, backend: RealworldWeb.Gettext
 
   @doc """
   Renders a modal.
