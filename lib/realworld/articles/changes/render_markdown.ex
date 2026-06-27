@@ -10,7 +10,15 @@ defmodule Realworld.Articles.Changes.RenderMarkdown do
   end
 
   defp render_markdown(changeset) do
-    body = changeset |> Changeset.get_attribute(:body_raw) |> Earmark.as_html!()
-    Changeset.change_attribute(changeset, :body, body)
+    body =
+      changeset
+      |> Changeset.get_attribute(:body_raw)
+      |> MDEx.to_html!(
+        extension: [table: true, strikethrough: true, autolink: true, tasklist: true],
+        render: [unsafe: true],
+        sanitize: MDEx.Document.default_sanitize_options()
+      )
+
+    Changeset.force_change_attribute(changeset, :body, body)
   end
 end
