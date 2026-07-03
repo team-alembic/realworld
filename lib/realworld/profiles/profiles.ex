@@ -10,7 +10,7 @@ defmodule Realworld.Profiles do
       define :following, args: [:target_id]
       define :follow, args: [:target_id]
       define :unfollow, args: [:target_id], require_reference?: false, get?: true
-      define :list_followings, args: [:target_id]
+      define :list_followings
     end
   end
 end

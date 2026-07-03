@@ -59,4 +59,40 @@ defmodule Realworld.DataCase do
 
     user
   end
+
+  @doc """
+  Publishes an article authored by `actor`.
+
+  A thin wrapper over the `:publish` action for arranging setup data (e.g. a
+  feed of articles). Tests that are specifically *about* publishing call the
+  action directly so the mechanics stay visible.
+  """
+  def build_article(actor, attrs \\ []) do
+    attrs =
+      attrs
+      |> Map.new()
+      |> Map.put_new(:title, "Article #{unique()}")
+      |> Map.put_new(:description, "A description")
+      |> Map.put_new(:body_raw, "Some **markdown** body.")
+
+    Realworld.Articles.Article
+    |> Ash.Changeset.for_create(:publish, attrs, actor: actor)
+    |> Ash.create!()
+  end
+
+  @doc """
+  Creates a tag directly. `Tag` has no policies, so no actor is required.
+  """
+  def build_tag(name) do
+    Realworld.Articles.Tag
+    |> Ash.Changeset.for_create(:create, %{name: name})
+    |> Ash.create!()
+  end
+
+  @doc """
+  Favorites `article` as `user` via the domain code interface.
+  """
+  def favorite_article(user, article) do
+    Realworld.Articles.favorite!(article.id, actor: user)
+  end
 end
