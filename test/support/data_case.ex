@@ -33,11 +33,16 @@ defmodule Realworld.DataCase do
     :ok
   end
 
-  def email, do: Faker.Internet.email()
+  # Simple, dependency-free generators. `System.unique_integer/1` guarantees a
+  # process-wide unique, monotonically increasing value, so these satisfy the
+  # `unique_email`/`unique_username` identities without a fixture library.
+  def email, do: "user#{unique()}@example.com"
 
-  def username, do: Faker.Internet.user_name()
+  def username, do: "user#{unique()}"
 
-  def password, do: Faker.Lorem.words(4) |> Enum.join(" ")
+  def password, do: "password#{unique()}"
+
+  defp unique, do: System.unique_integer([:positive])
 
   def build_user(attrs \\ []) do
     attrs =

@@ -6,7 +6,7 @@ defmodule Realworld.Articles.ArticleTest do
   test "publish article with slugified title" do
     actor = build_user()
 
-    title = Faker.Lorem.words(10) |> Enum.join(" ")
+    title = "How to test Ash resources #{System.unique_integer([:positive])}"
 
     {:ok, published_article} =
       Article
@@ -14,8 +14,8 @@ defmodule Realworld.Articles.ArticleTest do
         :publish,
         %{
           title: title,
-          description: Faker.Lorem.sentence(10),
-          body_raw: Faker.Lorem.paragraph(5)
+          description: "An introduction to testing Ash",
+          body_raw: "Some article body."
         },
         actor: actor
       )

@@ -53,8 +53,7 @@ defmodule Realworld.MixProject do
       {:ash_authentication_phoenix, "~> 2.0"},
       {:picosat_elixir, "~> 0.2"},
       {:slugify, "~> 1.3"},
-      {:mdex, "~> 0.13"},
-      {:faker, "~> 0.18", only: :test}
+      {:mdex, "~> 0.13"}
     ]
   end
 
