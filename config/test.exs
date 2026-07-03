@@ -30,3 +30,6 @@ config :realworld, Realworld.Repo,
   pool_size: 10
 
 config :ash, :disable_async?, true
+
+# PhoenixTest needs to know which endpoint to drive.
+config :phoenix_test, :endpoint, RealworldWeb.Endpoint

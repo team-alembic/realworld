@@ -28,6 +28,17 @@ defmodule Realworld.DataCase do
   end
 
   setup tags do
+    setup_sandbox(tags)
+    :ok
+  end
+
+  @doc """
+  Sets up the Ecto sandbox for a test.
+
+  Shared (non-async) mode lets other processes — e.g. a LiveView spawned during
+  a `PhoenixTest` run — use the same connection, so `ConnCase` reuses this.
+  """
+  def setup_sandbox(tags) do
     pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Realworld.Repo, shared: not tags[:async])
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
     :ok
