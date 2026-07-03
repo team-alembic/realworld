@@ -10,6 +10,7 @@ import Config
 # Configures the endpoint
 config :realworld, RealworldWeb.Endpoint,
   url: [host: "localhost"],
+  adapter: Bandit.PhoenixAdapter,
   render_errors: [view: RealworldWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Realworld.PubSub,
   live_view: [signing_salt: "WoMwX3/2"]

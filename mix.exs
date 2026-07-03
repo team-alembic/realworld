@@ -46,7 +46,7 @@ defmodule Realworld.MixProject do
       {:telemetry_poller, "~> 1.1"},
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.4"},
-      {:plug_cowboy, "~> 2.7"},
+      {:bandit, "~> 1.5"},
       {:ash, "~> 3.0"},
       {:ash_postgres, "~> 2.0"},
       {:ash_authentication, "~> 4.0"},
