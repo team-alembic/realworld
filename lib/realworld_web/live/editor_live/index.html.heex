@@ -13,7 +13,7 @@
             </ul>
           </div>
         <% end %>
-        <.simple_form for={@form} phx-change="validate" phx-submit="save">
+        <.simple_form id="article-form" for={@form} phx-change="validate" phx-submit="save">
           <%= hidden_inputs_for(@form) %>
           <fieldset>
             <fieldset class="form-group">

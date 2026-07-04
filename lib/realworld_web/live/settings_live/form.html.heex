@@ -8,7 +8,7 @@
       <% end %>
     <% end %>
   </ul>
-  <.simple_form for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself}>
+  <.simple_form id="settings-form" for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself}>
     <fieldset>
       <fieldset class="form-group">
         <%= text_input(@form, :image,
