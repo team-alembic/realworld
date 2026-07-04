@@ -9,8 +9,14 @@ defmodule Realworld.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      compilers: [:phoenix_live_view] ++ Mix.compilers(),
+      listeners: [Phoenix.CodeReloader]
     ]
+  end
+
+  def cli do
+    [preferred_envs: [precommit: :test]]
   end
 
   # Configuration for the OTP application.
@@ -46,6 +52,7 @@ defmodule Realworld.MixProject do
       {:telemetry_poller, "~> 1.1"},
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.4"},
+      {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:ash, "~> 3.0"},
       {:ash_postgres, "~> 2.0"},
@@ -65,8 +72,10 @@ defmodule Realworld.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get"],
-      "assets.deploy": ["esbuild default --minify", "phx.digest"]
+      setup: ["deps.get", "ash.setup"],
+      test: ["ash.setup --quiet", "test"],
+      "assets.deploy": ["esbuild default --minify", "phx.digest"],
+      precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end
 end

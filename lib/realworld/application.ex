@@ -10,6 +10,8 @@ defmodule Realworld.Application do
     children = [
       # Start the Telemetry supervisor
       RealworldWeb.Telemetry,
+      # Optional DNS-based clustering (no-op unless :dns_cluster_query is set)
+      {DNSCluster, query: Application.get_env(:realworld, :dns_cluster_query) || :ignore},
       # Start the PubSub system
       {Phoenix.PubSub, name: Realworld.PubSub},
       # Start the Endpoint (http/https)
