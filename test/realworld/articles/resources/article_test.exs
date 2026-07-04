@@ -64,7 +64,9 @@ defmodule Realworld.Articles.ArticleTest do
 
     test "relates the actor as the author" do
       actor = build_user()
-      {:ok, article} = publish(actor, %{title: "Authored #{uniq()}", description: "d", body_raw: "b"})
+
+      {:ok, article} =
+        publish(actor, %{title: "Authored #{uniq()}", description: "d", body_raw: "b"})
 
       article = Ash.load!(article, :user)
       assert article.user.id == actor.id
@@ -106,7 +108,12 @@ defmodule Realworld.Articles.ArticleTest do
       build_tag("elixir")
 
       {:ok, article} =
-        publish(actor, %{title: "Reuse #{uniq()}", description: "d", body_raw: "b", tags: [%{name: "elixir"}]})
+        publish(actor, %{
+          title: "Reuse #{uniq()}",
+          description: "d",
+          body_raw: "b",
+          tags: [%{name: "elixir"}]
+        })
 
       # Matched by the `unique_name` identity, so no second row is inserted.
       assert Ash.count!(Tag) == 1
@@ -118,13 +125,17 @@ defmodule Realworld.Articles.ArticleTest do
   describe "update (update :update, author only)" do
     test "the author can update; the slug and body are recomputed" do
       author = build_user()
-      {:ok, article} = publish(author, %{title: "Original #{uniq()}", description: "d", body_raw: "b"})
+
+      {:ok, article} =
+        publish(author, %{title: "Original #{uniq()}", description: "d", body_raw: "b"})
 
       new_title = "Updated #{uniq()}"
 
       {:ok, updated} =
         article
-        |> Ash.Changeset.for_update(:update, %{title: new_title, body_raw: "## New body"}, actor: author)
+        |> Ash.Changeset.for_update(:update, %{title: new_title, body_raw: "## New body"},
+          actor: author
+        )
         |> Ash.update()
 
       assert updated.slug == Slug.slugify(new_title)
@@ -156,7 +167,9 @@ defmodule Realworld.Articles.ArticleTest do
     test "a non-author cannot update the article (Forbidden)" do
       author = build_user()
       other = build_user()
-      {:ok, article} = publish(author, %{title: "Owned #{uniq()}", description: "d", body_raw: "b"})
+
+      {:ok, article} =
+        publish(author, %{title: "Owned #{uniq()}", description: "d", body_raw: "b"})
 
       # Update policy is `relates_to_actor_via(:user)`. The tuple form returns
       # a Forbidden error; the bang form (`Ash.update!`) would raise it.
@@ -169,7 +182,9 @@ defmodule Realworld.Articles.ArticleTest do
     test "Ash.can?/2 reports the policy result without performing the action" do
       author = build_user()
       other = build_user()
-      {:ok, article} = publish(author, %{title: "Perm #{uniq()}", description: "d", body_raw: "b"})
+
+      {:ok, article} =
+        publish(author, %{title: "Perm #{uniq()}", description: "d", body_raw: "b"})
 
       assert Ash.can?({article, :update}, author)
       refute Ash.can?({article, :update}, other)

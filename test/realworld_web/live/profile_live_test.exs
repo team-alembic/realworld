@@ -9,6 +9,7 @@ defmodule RealworldWeb.ProfileLiveTest do
   test "shows the profile and the user's articles", %{conn: conn} do
     # `bio` isn't accepted at registration; it's set through the :update action.
     user = build_user()
+
     {:ok, user} =
       user
       |> Ash.Changeset.for_update(:update, %{bio: "Elixir enthusiast"}, actor: user)

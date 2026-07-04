@@ -46,6 +46,7 @@ defmodule Realworld.MixProject do
       {:phoenix_live_view, "~> 1.2"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_test, "~> 0.11", only: :test, runtime: false},
+      {:sourceror, "~> 1.7", only: [:dev, :test]},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.1"},

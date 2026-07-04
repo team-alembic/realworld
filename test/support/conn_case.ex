@@ -29,7 +29,14 @@ defmodule RealworldWeb.ConnCase do
       import RealworldWeb.ConnCase
       # Data builders (build_user/1, build_article/2, favorite_article/2, ...)
       import Realworld.DataCase,
-        only: [build_user: 0, build_user: 1, build_article: 1, build_article: 2, build_tag: 1, favorite_article: 2]
+        only: [
+          build_user: 0,
+          build_user: 1,
+          build_article: 1,
+          build_article: 2,
+          build_tag: 1,
+          favorite_article: 2
+        ]
 
       # The default endpoint for testing
       @endpoint RealworldWeb.Endpoint

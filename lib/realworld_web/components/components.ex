@@ -18,7 +18,7 @@ defmodule RealworldWeb.Components do
 
     ~H"""
     <a class={@class} href={@href}>
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
     </a>
     """
   end
