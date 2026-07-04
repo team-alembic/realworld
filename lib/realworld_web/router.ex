@@ -67,17 +67,6 @@ defmodule RealworldWeb.Router do
     end
   end
 
-  # Enables the Swoosh mailbox preview in development.
-  #
-  # Note that preview only shows emails that were sent by the same
-  # node running the Phoenix server.
-  if Mix.env() == :dev do
-    scope "/dev" do
-      pipe_through :browser
-
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
-    end
-  end
 
   def require_authenticated_user(conn, _opts) do
     if conn.assigns[:current_user] do

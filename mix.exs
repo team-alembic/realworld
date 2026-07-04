@@ -42,7 +42,6 @@ defmodule Realworld.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_test, "~> 0.11", only: :test, runtime: false},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
-      {:swoosh, "~> 1.16"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.1"},
       {:gettext, "~> 1.0"},

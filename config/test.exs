@@ -7,9 +7,6 @@ config :realworld, RealworldWeb.Endpoint,
   secret_key_base: "lZwKjZGfO8/fLAiFStlp9+zCpdIG3iz0b51uFhkcgn/Tel2A5b/5L93L1BbjcbuK",
   server: false
 
-# In test we don't send emails.
-config :realworld, Realworld.Mailer, adapter: Swoosh.Adapters.Test
-
 # Print only warnings and errors during test
 config :logger, level: :warning
 
