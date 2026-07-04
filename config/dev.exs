@@ -49,8 +49,7 @@ config :realworld, RealworldWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/realworld_web/(live|views)/.*(ex)$",
-      ~r"lib/realworld_web/templates/.*(eex)$"
+      ~r"lib/realworld_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 

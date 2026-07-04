@@ -6,7 +6,7 @@ defmodule RealworldWeb do
   This can be used in your application as:
 
       use RealworldWeb, :controller
-      use RealworldWeb, :view
+      use RealworldWeb, :html
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -23,9 +23,8 @@ defmodule RealworldWeb do
   def controller do
     quote do
       use Phoenix.Controller,
-        formats: [html: "View", json: "View"]
-
-      plug :put_layout, html: RealworldWeb.LayoutView
+        formats: [:html, :json],
+        layouts: [html: RealworldWeb.Layouts]
 
       import Plug.Conn
       use Gettext, backend: RealworldWeb.Gettext
@@ -34,27 +33,23 @@ defmodule RealworldWeb do
     end
   end
 
-  def view do
+  def html do
     quote do
-      use Phoenix.View,
-        root: "lib/realworld_web/templates",
-        namespace: RealworldWeb
+      use Phoenix.Component
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
-        only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
+        only: [get_csrf_token: 0, view_module: 1, view_template: 1]
 
-      # Include shared imports and aliases for views
+      # Include shared imports and aliases for HTML rendering
       unquote(html_helpers())
     end
   end
 
   def live_view do
     quote do
-      use Phoenix.Component
-
       use Phoenix.LiveView,
-        layout: {RealworldWeb.LayoutView, :live}
+        layout: {RealworldWeb.Layouts, :live}
 
       unquote(html_helpers())
     end
@@ -97,22 +92,20 @@ defmodule RealworldWeb do
     quote do
       alias Phoenix.LiveView.JS
 
-      # HTML escaping functionality
-      import Phoenix.HTML
-      # Core UI components and translation
-      import RealworldWeb.CoreComponents
       use Gettext, backend: RealworldWeb.Gettext
-      # Shortcut for generating JS commands
 
-      # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
-      import Phoenix.Component
-
-      # Import basic rendering functionality (render, render_layout, etc)
-      import Phoenix.View
+      # HTML escaping plus the phoenix_html / phoenix_html_helpers form + tag builders
+      # (text_input/2, submit/2, etc.) that the Conduit form templates rely on
       import Phoenix.HTML
       import Phoenix.HTML.Form
       use PhoenixHTMLHelpers
 
+      # LiveView and .heex helpers (assigns, slots, <.form>, live_patch, etc.)
+      import Phoenix.Component
+
+      # Project components and helpers
+      import RealworldWeb.CoreComponents
+      import RealworldWeb.Components
       import RealworldWeb.ErrorHelpers
       import RealworldWeb.LiveHelpers
 

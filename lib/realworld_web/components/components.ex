@@ -1,8 +1,9 @@
 defmodule RealworldWeb.Components do
   use Phoenix.Component
 
-  attr :path, :string, required: true
+  attr :href, :string, required: true
   attr :path_info, :list, required: true
+  slot :inner_block, required: true
 
   def nav_link(assigns) do
     current_path = Path.join(["/" | assigns.path_info])

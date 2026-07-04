@@ -15,7 +15,7 @@ defmodule RealworldWeb.AuthController do
   def failure(conn, _activity, _reason) do
     conn
     |> put_status(401)
-    |> render("failure.html")
+    |> render(:failure)
   end
 
   def sign_out(conn, _params) do
