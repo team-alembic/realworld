@@ -66,7 +66,7 @@ defmodule Realworld.Accounts.User do
     attribute :bio, :string, public?: true
 
     attribute :image, :string,
-      default: "https://api.realworld.io/images/smiley-cyrus.jpeg",
+      default: "/images/smiley-cyrus.jpeg",
       public?: true
 
     create_timestamp :created_at

@@ -244,7 +244,7 @@ defmodule RealworldWeb.ProfileLive.Index do
     end
   end
 
-  defp default_image(nil), do: "https://api.realworld.io/images/smiley-cyrus.jpeg"
+  defp default_image(nil), do: "/images/smiley-cyrus.jpeg"
   defp default_image(image), do: image
 
   defp page(nil), do: nil
