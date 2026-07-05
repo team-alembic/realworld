@@ -11,7 +11,7 @@ defmodule RealworldWeb.ErrorHelpers do
   """
   def error_tag(form, field) do
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
-      field_name = field |> Atom.to_string() |> String.capitalize()
+      field_name = Phoenix.Naming.humanize(field)
 
       content_tag(:span, "#{field_name} #{translate_error(error)}",
         class: "invalid-feedback",

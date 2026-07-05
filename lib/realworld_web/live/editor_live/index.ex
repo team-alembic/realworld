@@ -21,6 +21,17 @@ defmodule RealworldWeb.EditorLive.Index do
   end
 
   def handle_event("save", %{"form" => params}, socket) do
+    # Tag pills are added server-side (the TagInput hook pushes "add_tag" →
+    # add_form), so a submit racing that round-trip would be missing the
+    # newest pill from its DOM params and silently drop the tag. The
+    # server-side form is authoritative for tags; take everything else from
+    # the submitted params.
+    tags =
+      (socket.assigns.form.source.forms[:tags] || [])
+      |> Enum.map(&%{"name" => AshPhoenix.Form.value(&1, :name)})
+
+    params = Map.put(params, "tags", tags)
+
     case AshPhoenix.Form.submit(socket.assigns.form, params: params) do
       {:ok, result} ->
         {:noreply, redirect(socket, to: ~p"/article/#{result.slug}")}
@@ -34,18 +45,27 @@ defmodule RealworldWeb.EditorLive.Index do
     tag = String.trim(tag)
     tags = socket.assigns.form.source.forms[:tags] || []
 
-    case Enum.any?(tags, fn t -> AshPhoenix.Form.value(t, :name) == tag end) do
-      true ->
-        {:reply, %{tag_added: false}, socket}
+    if tag == "" || Enum.any?(tags, fn t -> AshPhoenix.Form.value(t, :name) == tag end) do
+      {:reply, %{tag_added: false}, socket}
+    else
+      # `validate_opts: [errors: false]` — add_form re-validates the whole
+      # form by default, which would flash "is required" errors on fields
+      # the user hasn't reached yet (same reason the "validate" event passes
+      # `errors: false`).
+      form =
+        AshPhoenix.Form.add_form(socket.assigns.form, "form[tags]",
+          params: %{name: tag},
+          validate_opts: [errors: false]
+        )
 
-      false ->
-        form = AshPhoenix.Form.add_form(socket.assigns.form, "form[tags]", params: %{name: tag})
-        {:reply, %{tag_added: true}, assign(socket, form: form)}
+      {:reply, %{tag_added: true}, assign(socket, form: form)}
     end
   end
 
   def handle_event("remove_tag", %{"path" => path}, socket) do
-    form = AshPhoenix.Form.remove_form(socket.assigns.form, path)
+    form =
+      AshPhoenix.Form.remove_form(socket.assigns.form, path, validate_opts: [errors: false])
+
     {:noreply, assign(socket, form: form)}
   end
 
