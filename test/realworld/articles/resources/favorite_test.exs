@@ -4,7 +4,8 @@ defmodule Realworld.Articles.FavoriteTest do
 
     * **upsert** creates (`add_favorite`) that are idempotent per (user, article)
     * detecting "was this a fresh favorite?" via `created_at == updated_at`
-    * **`get?` reads** (`favorited`) returning a record, a NotFound error, or
+    * **`get?` reads** (`favorited`) returning a record, a NotFound error
+      (surfaced wrapped in the `Ash.Error.Invalid` error class), or
       `{:ok, nil}` with `not_found_error?: false`
     * destroys scoped to the actor through `change filter(...)`
     * reading the `favorites_count` **aggregate** with `Ash.load!/2`
@@ -55,7 +56,10 @@ defmodule Realworld.Articles.FavoriteTest do
       article = build_article(build_user())
       reader = build_user()
 
-      assert {:error, %Ash.Error.Invalid{}} = Articles.favorited(article.id, actor: reader)
+      # No match on a `get?` read is an `Ash.Error.Query.NotFound`, wrapped in
+      # the `Ash.Error.Invalid` error class.
+      assert {:error, %Ash.Error.Invalid{errors: [%Ash.Error.Query.NotFound{}]}} =
+               Articles.favorited(article.id, actor: reader)
 
       {:ok, _} = Articles.favorite(article.id, actor: reader)
 
