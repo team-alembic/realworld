@@ -157,6 +157,13 @@ defmodule RealworldWeb.PageLive.Index do
     {:noreply, push_patch(socket, to: "/")}
   end
 
+  # The auth on_mount always assigns :current_user (nil for guests), so guest
+  # clauses must come first — a head matching on the key alone also binds nil.
+  def handle_event(event, _, %{assigns: %{current_user: nil}} = socket)
+      when event in ["favorite-article", "unfavorite-article"] do
+    {:noreply, redirect(socket, to: ~p"/login")}
+  end
+
   def handle_event(
         "favorite-article",
         %{"article_id" => article_id},
@@ -182,8 +189,7 @@ defmodule RealworldWeb.PageLive.Index do
 
         {:noreply, socket}
 
-      res ->
-      IO.inspect(res)
+      _ ->
         {:noreply, socket}
     end
   end
@@ -216,13 +222,5 @@ defmodule RealworldWeb.PageLive.Index do
       _ ->
         {:noreply, socket}
     end
-  end
-
-  def handle_event("favorite-article", _, socket) do
-    {:noreply, redirect(socket, to: ~p"/login")}
-  end
-
-  def handle_event("unfavorite-article", _, socket) do
-    {:noreply, redirect(socket, to: ~p"/login")}
   end
 end

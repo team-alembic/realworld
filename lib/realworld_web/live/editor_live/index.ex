@@ -20,10 +20,10 @@ defmodule RealworldWeb.EditorLive.Index do
     {:noreply, assign(socket, form: form)}
   end
 
-  def handle_event("save", _params, socket) do
-    case AshPhoenix.Form.submit(socket.assigns.form) do
+  def handle_event("save", %{"form" => params}, socket) do
+    case AshPhoenix.Form.submit(socket.assigns.form, params: params) do
       {:ok, result} ->
-        {:noreply, redirect(socket, to: "/article/#{result.slug}")}
+        {:noreply, redirect(socket, to: ~p"/article/#{result.slug}")}
 
       {:error, form} ->
         {:noreply, assign(socket, form: form)}
@@ -52,7 +52,6 @@ defmodule RealworldWeb.EditorLive.Index do
   defp apply_action(socket, :new, _) do
     form =
       AshPhoenix.Form.for_create(Article, :publish,
-        api: Realworld.Articles,
         actor: socket.assigns.current_user,
         forms: [
           auto?: true
@@ -64,7 +63,7 @@ defmodule RealworldWeb.EditorLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"slug" => slug}) do
-    case get_article_by_slug(slug) do
+    case get_article_by_slug(slug, socket.assigns.current_user) do
       {:ok, article} ->
         form =
           AshPhoenix.Form.for_update(article, :update,
@@ -82,7 +81,7 @@ defmodule RealworldWeb.EditorLive.Index do
     end
   end
 
-  defp get_article_by_slug(slug) do
-    slug |> Articles.get_article_by_slug() |> Ash.load(:tags)
+  defp get_article_by_slug(slug, actor) do
+    Articles.get_article_by_slug(slug, actor: actor, load: [:tags])
   end
 end

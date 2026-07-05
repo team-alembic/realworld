@@ -32,7 +32,7 @@ defmodule RealworldWeb.ArticleLive.Index do
         |> assign(:article, article)
         |> assign(:is_owner, is_owner?(socket.assigns[:current_user], article.user))
         |> assign(:following, follows(socket.assigns[:current_user], article.user))
-        |> assign(:favorite, favorited(article))
+        |> assign(:favorite, favorited(article, socket.assigns[:current_user]))
 
       _ ->
         redirect(socket, to: ~p"/")
@@ -44,6 +44,18 @@ defmodule RealworldWeb.ArticleLive.Index do
     Articles.destroy_article!(socket.assigns.article, actor: socket.assigns.current_user)
 
     {:noreply, redirect(socket, to: ~p"/")}
+  end
+
+  # The auth on_mount always assigns :current_user (nil for guests), so guest
+  # clauses must come first — a head matching on the key alone also binds nil.
+  def handle_event(event, _, %{assigns: %{current_user: nil}} = socket)
+      when event in [
+             "favorite-article",
+             "unfavorite-article",
+             "follow-profile",
+             "unfollow-profile"
+           ] do
+    {:noreply, redirect(socket, to: ~p"/login")}
   end
 
   def handle_event(
@@ -88,14 +100,6 @@ defmodule RealworldWeb.ArticleLive.Index do
     end
   end
 
-  def handle_event("favorite-article", _, socket) do
-    {:noreply, redirect(socket, to: ~p"/login")}
-  end
-
-  def handle_event("unfavorite-article", _, socket) do
-    {:noreply, redirect(socket, to: ~p"/login")}
-  end
-
   def handle_event(
         "follow-profile",
         _,
@@ -122,14 +126,6 @@ defmodule RealworldWeb.ArticleLive.Index do
       _ ->
         {:noreply, socket}
     end
-  end
-
-  def handle_event("follow-profile", _, socket) do
-    {:noreply, redirect(socket, to: ~p"/login")}
-  end
-
-  def handle_event("unfollow-profile", _, socket) do
-    {:noreply, redirect(socket, to: ~p"/login")}
   end
 
   @impl true
@@ -188,10 +184,10 @@ defmodule RealworldWeb.ArticleLive.Index do
     end
   end
 
-  def favorited(nil, _), do: nil
+  defp favorited(_article, nil), do: nil
 
-  def favorited(article) do
-    case Articles.favorited(article.id) do
+  defp favorited(article, current_user) do
+    case Articles.favorited(article.id, actor: current_user, not_found_error?: false) do
       {:ok, favorite} -> favorite
       _ -> nil
     end

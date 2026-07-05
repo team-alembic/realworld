@@ -4,12 +4,7 @@ defmodule RealworldWeb.SettingsLive.Form do
 
   @impl true
   def update(assigns, socket) do
-    socket =
-      socket
-      |> assign(assigns)
-      |> assign(:trigger_action, false)
-
-    {:ok, socket}
+    {:ok, assign(socket, assigns)}
   end
 
   @impl true
@@ -41,7 +36,7 @@ defmodule RealworldWeb.SettingsLive.Form do
         {:noreply, redirect(socket, to: ~p"/profile/#{user.username}")}
 
       {:error, form} ->
-        assign(socket, :form, form)
+        {:noreply, assign(socket, :form, form)}
     end
   end
 

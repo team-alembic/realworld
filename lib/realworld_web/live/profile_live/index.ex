@@ -232,26 +232,6 @@ defmodule RealworldWeb.ProfileLive.Index do
     end
   end
 
-  defp apply_action(socket, :profile, %{"username" => username}) do
-    with {:ok, user} <- Accounts.get_user_by_username(username),
-         {:ok, page} <-
-           Articles.list_articles(
-             %{filter: construct_filter(socket.assigns.active_view, user)},
-             page: [limit: socket.assigns.page_limit, offset: socket.assigns.page_offset],
-             actor: socket.assigns.current_user
-           ) do
-      socket
-      |> assign(:articles, page.results)
-      |> assign(:pages, ceil(page.count / socket.assigns.page_limit))
-      |> assign(:profile_user, user)
-      |> assign(:following, nil)
-      |> assign(:current_user, nil)
-    else
-      _ ->
-        put_flash(socket, :error, "Unable to fetch articles. Please try again later.")
-    end
-  end
-
   defp following(_current_user = nil, _profile_user), do: false
 
   defp following(current_user, profile_user) do

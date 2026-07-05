@@ -5,19 +5,10 @@ defmodule RealworldWeb.ArticleLive.CommentsComponent do
   alias Realworld.Articles.Comment
 
   def update(assigns, socket) do
-    # ? should this go here or in the parent?
-    form =
-      Form.for_create(Comment, :create,
-        as: "comment",
-        forms: [auto?: true],
-        actor: assigns[:current_user]
-      )
-      |> to_form()
-
     socket =
       socket
       |> assign(assigns)
-      |> assign(form: form)
+      |> assign_new(:form, fn -> new_comment_form(assigns[:current_user]) end)
 
     {:ok, socket}
   end
@@ -28,19 +19,23 @@ defmodule RealworldWeb.ArticleLive.CommentsComponent do
         %{assigns: %{form: form, article_id: article_id}} = socket
       ) do
     case Form.submit(form, params: %{body: body, article_id: article_id}) do
-      {:ok, _} ->
-        {:noreply, assign(socket, form: form)}
+      {:ok, _comment} ->
+        {:noreply, assign(socket, form: new_comment_form(socket.assigns[:current_user]))}
 
       {:error, form} ->
         {:noreply, assign(socket, form: form)}
     end
-
-    {:noreply, socket}
   end
 
   def handle_event("delete-comment", %{"id" => id}, socket) do
     Realworld.Articles.destroy_comment!(id, actor: socket.assigns[:current_user])
 
     {:noreply, socket}
+  end
+
+  defp new_comment_form(current_user) do
+    Comment
+    |> Form.for_create(:create, as: "comment", forms: [auto?: true], actor: current_user)
+    |> to_form()
   end
 end
