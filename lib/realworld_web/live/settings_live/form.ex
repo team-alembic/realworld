@@ -27,11 +27,11 @@ defmodule RealworldWeb.SettingsLive.Form do
       |> assign(:form, form)
       |> assign(:errors, Form.errors(form))
 
-    submit_form(form, socket)
+    submit_form(form, params, socket)
   end
 
-  defp submit_form(%{source: %{valid?: true}} = form, socket) do
-    case Form.submit(form) do
+  defp submit_form(%{source: %{valid?: true}} = form, params, socket) do
+    case Form.submit(form, params: params) do
       {:ok, user} ->
         {:noreply, redirect(socket, to: ~p"/profile/#{user.username}")}
 
@@ -40,7 +40,7 @@ defmodule RealworldWeb.SettingsLive.Form do
     end
   end
 
-  defp submit_form(_form, socket) do
+  defp submit_form(_form, _params, socket) do
     {:noreply, socket}
   end
 end
