@@ -36,7 +36,7 @@
             <%= if @active_view == :tag_feed do %>
               <li class="nav-item">
                 <span role="button" class={"nav-link #{active_class(:tag_feed, @active_view)}"}>
-                  <%= @filter_tag %>
+                  {@filter_tag}
                 </span>
               </li>
             <% end %>
@@ -60,7 +60,7 @@
           <div class="tag-list">
             <%= for tag <- @tags do %>
               <.link patch={"?tag=#{tag.name}"} class="tag-pill tag-default">
-                <%= tag.name %>
+                {tag.name}
               </.link>
             <% end %>
           </div>

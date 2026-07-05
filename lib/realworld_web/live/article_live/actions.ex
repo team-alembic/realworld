@@ -14,10 +14,10 @@ defmodule RealworldWeb.ArticleLive.Actions do
       <a href={@profile_path}><img src={@article.user.image} /></a>
       <div class="info">
         <a href={@profile_path} class="author">
-          <%= @article.user.username %>
+          {@article.user.username}
         </a>
         <span class="date">
-          <%= Calendar.strftime(@article.created_at, "%B %d, %Y") %>
+          {Calendar.strftime(@article.created_at, "%B %d, %Y")}
         </span>
       </div>
       <span :if={@is_owner}>
@@ -34,10 +34,10 @@ defmodule RealworldWeb.ArticleLive.Actions do
           class="btn btn-sm btn-outline-secondary"
           phx-click="follow-profile"
         >
-          <i class="ion-plus-round"></i> &nbsp; Follow <%= @article.user.username %>
+          <i class="ion-plus-round"></i> &nbsp; Follow {@article.user.username}
         </button>
         <button :if={@is_following} class="btn btn-sm btn-secondary" phx-click="unfollow-profile">
-          <i class="ion-plus-round"></i> &nbsp; Unfollow <%= @article.user.username %>
+          <i class="ion-plus-round"></i> &nbsp; Unfollow {@article.user.username}
         </button>
         <button
           :if={!@is_favorited}
@@ -45,11 +45,11 @@ defmodule RealworldWeb.ArticleLive.Actions do
           phx-click="favorite-article"
         >
           <i class="ion-heart"></i>
-          &nbsp; Favorite Article <span class="counter">(<%= @article.favorites_count %>)</span>
+          &nbsp; Favorite Article <span class="counter">({@article.favorites_count})</span>
         </button>
         <button :if={@is_favorited} class="btn btn-sm btn-primary" phx-click="unfavorite-article">
           <i class="ion-heart"></i>
-          &nbsp; Unfavorite Article <span class="counter">(<%= @article.favorites_count %>)</span>
+          &nbsp; Unfavorite Article <span class="counter">({@article.favorites_count})</span>
         </button>
       </span>
     </div>

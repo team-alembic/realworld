@@ -3,32 +3,38 @@
     <%= if @form.errors do %>
       <%= for {k, v} <- AshPhoenix.Form.errors(@form) do %>
         <li>
-          <%= humanize("#{k} #{v}") %>
+          {humanize("#{k} #{v}")}
         </li>
       <% end %>
     <% end %>
   </ul>
-  <.simple_form id="auth-form" for={@form} phx-change="validate" phx-submit="submit" phx-target={@myself}>
+  <.simple_form
+    id="auth-form"
+    for={@form}
+    phx-change="validate"
+    phx-submit="submit"
+    phx-target={@myself}
+  >
     <%= if @live_action in [:register] do %>
       <fieldset class="form-group">
-        <%= text_input(@form, :username,
+        {text_input(@form, :username,
           class: "form-control form-control-lg",
           placeholder: "Your Name"
-        ) %>
+        )}
       </fieldset>
     <% end %>
     <fieldset class="form-group">
-      <%= text_input(@form, :email,
+      {text_input(@form, :email,
         class: "form-control form-control-lg",
         placeholder: "Email"
-      ) %>
+      )}
     </fieldset>
     <fieldset class="form-group">
-      <%= password_input(@form, :password,
+      {password_input(@form, :password,
         class: "form-control form-control-lg",
         placeholder: "Password"
-      ) %>
+      )}
     </fieldset>
-    <%= submit(@cta, class: "btn btn-lg btn-primary pull-xs-right") %>
+    {submit(@cta, class: "btn btn-lg btn-primary pull-xs-right")}
   </.simple_form>
 </div>

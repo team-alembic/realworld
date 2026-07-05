@@ -1,7 +1,7 @@
 <div class="article-page">
   <div class="banner">
     <div class="container">
-      <h1><%= @article.title %></h1>
+      <h1>{@article.title}</h1>
       <.actions
         article={@article}
         edit_path={~p"/editor/#{@article.slug}"}
@@ -16,11 +16,11 @@
   <div class="container page">
     <div class="row article-content">
       <div class="col-md-12">
-        <article><%= raw(@article.body) %></article>
+        <article>{raw(@article.body)}</article>
         <ul class="tag-list">
           <%= for tag <- @article.tags do %>
             <li class="tag-default tag-pill tag-outline">
-              <%= tag.name %>
+              {tag.name}
             </li>
           <% end %>
         </ul>

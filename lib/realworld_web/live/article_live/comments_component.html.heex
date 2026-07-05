@@ -13,16 +13,16 @@
       phx-target={@myself}
     >
       <div class="card-block">
-        <%= textarea(@form, :body,
+        {textarea(@form, :body,
           class: "form-control",
           placeholder: "Write a comment...",
           rows: 3
-        ) %>
-        <%= error_tag(@form, :body) %>
+        )}
+        {error_tag(@form, :body)}
       </div>
       <div class="card-footer">
         <img src={@current_user.image} class="comment-author-img" />
-        <%= submit("Post Comment", class: "btn btn-sm btn-primary") %>
+        {submit("Post Comment", class: "btn btn-sm btn-primary")}
       </div>
     </.simple_form>
   </div>
@@ -30,7 +30,7 @@
   <div :for={comment <- @comments} class="card" id={comment.id}>
     <div class="card-block">
       <p class="card-text">
-        <%= comment.body %>
+        {comment.body}
       </p>
     </div>
     <div class="card-footer">
@@ -39,9 +39,9 @@
       </a>
       &nbsp;
       <a href={~p"/profile/#{comment.user.username}"} class="comment-author">
-        <%= comment.user.username %>
+        {comment.user.username}
       </a>
-      <span class="date-posted"><%= Calendar.strftime(comment.created_at, "%B %d, %Y") %></span>
+      <span class="date-posted">{Calendar.strftime(comment.created_at, "%B %d, %Y")}</span>
       <span :if={@current_user && @current_user.id == comment.user.id} class="mod-options">
         <i
           class="ion-trash-a"
@@ -49,8 +49,7 @@
           phx-click="delete-comment"
           phx-target={@myself}
           phx-value-id={comment.id}
-        >
-        </i>
+        ></i>
       </span>
     </div>
   </div>

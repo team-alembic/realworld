@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content={csrf_token_value()} />
     <.live_title suffix="· Phoenix Framework">
-      <%= assigns[:page_title] || "Conduit" %>
+      {assigns[:page_title] || "Conduit"}
     </.live_title>
     <link phx-track-static rel="stylesheet" href={static_path(@conn, "/assets/app.css")} />
     <script
@@ -57,7 +57,7 @@
                   path_info={@conn.path_info}
                 >
                   <img class="user-pic" src={@conn.assigns.current_user.image} loading="lazy" />
-                  <%= @current_user.username %>
+                  {@current_user.username}
                 </.nav_link>
               </li>
             <% else %>
@@ -76,7 +76,7 @@
         </div>
       </nav>
     </header>
-    <%= @inner_content %>
+    {@inner_content}
     <footer>
       <div class="container">
         <a href="/" class="logo-font">conduit</a>
