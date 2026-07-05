@@ -92,12 +92,15 @@ defmodule Realworld.DataCase do
   end
 
   @doc """
-  Creates a tag directly. `Tag` has no policies, so no actor is required.
+  Creates a tag directly. Tag creation requires an actor (its create policy is
+  `actor_present()`), but for arranging test data we skip authorization with
+  `authorize?: false` — the standard escape hatch for setup code that isn't
+  the behavior under test.
   """
   def build_tag(name) do
     Realworld.Articles.Tag
     |> Ash.Changeset.for_create(:create, %{name: name})
-    |> Ash.create!()
+    |> Ash.create!(authorize?: false)
   end
 
   @doc """

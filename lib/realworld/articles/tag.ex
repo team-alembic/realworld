@@ -1,6 +1,7 @@
 defmodule Realworld.Articles.Tag do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer],
     domain: Realworld.Articles
 
   postgres do
@@ -8,8 +9,20 @@ defmodule Realworld.Articles.Tag do
     repo Realworld.Repo
   end
 
+  policies do
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
+    # Tags are created through Article's manage_relationship (:publish and
+    # :update), which runs as the publishing actor — so this holds there too.
+    policy action_type(:create) do
+      authorize_if actor_present()
+    end
+  end
+
   actions do
-    defaults [:read, :destroy, create: [:name]]
+    defaults [:read, create: [:name]]
   end
 
   attributes do

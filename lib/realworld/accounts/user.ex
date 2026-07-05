@@ -2,11 +2,39 @@ defmodule Realworld.Accounts.User do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     extensions: [AshAuthentication],
+    authorizers: [Ash.Policy.Authorizer],
     domain: Realworld.Accounts
 
   postgres do
     table "users"
     repo Realworld.Repo
+  end
+
+  policies do
+    # AshAuthentication's own machinery (loading the session user, token
+    # operations) flags its requests with a private context; let those through
+    # wholesale.
+    bypass AshAuthentication.Checks.AshAuthenticationInteraction do
+      authorize_if always()
+    end
+
+    # The bypass does NOT cover our sign-in/registration UI: AuthLive submits
+    # :register_with_password and :sign_in_with_password directly via
+    # AshPhoenix.Form with a nil actor, so those need explicit anonymous
+    # policies. Sign-in is a read, covered below.
+    policy action(:register_with_password) do
+      authorize_if always()
+    end
+
+    # Profiles are public, and sign-in itself is a read action.
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
+    # Only you can change your own account.
+    policy action_type(:update) do
+      authorize_if expr(id == ^actor(:id))
+    end
   end
 
   actions do

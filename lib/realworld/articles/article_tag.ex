@@ -1,6 +1,11 @@
 defmodule Realworld.Articles.ArticleTag do
   @moduledoc """
-  The join resource between Article and Tag
+  The join resource between Article and Tag.
+
+  Deliberately has no policies: it is only ever written through Article's
+  policy-guarded `manage_relationship` (`:publish`/`:update`), and Article's
+  `on_missing: :unrelate` destroys rows here — naive destroy policies would
+  break article updates without adding any safety.
   """
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
@@ -20,7 +25,7 @@ defmodule Realworld.Articles.ArticleTag do
   end
 
   actions do
-    defaults [:create, :read, :update, :destroy]
+    defaults [:create, :read, :destroy]
   end
 
   relationships do
