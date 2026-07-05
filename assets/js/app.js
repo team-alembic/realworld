@@ -1,5 +1,7 @@
 // We import the CSS which is extracted to its own file by esbuild.
 // Remove this line if you add a your own CSS build pipeline (e.g postcss).
+// The vendored conduit theme must come first so app.css can override it.
+import "../vendor/main.css"
 import "../css/app.css"
 
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
