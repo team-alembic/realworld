@@ -6,7 +6,12 @@ defmodule RealworldWeb.AuthLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    # Already signed in? There is nothing for you here.
+    if socket.assigns[:current_user] do
+      {:ok, push_navigate(socket, to: ~p"/")}
+    else
+      {:ok, socket}
+    end
   end
 
   @impl true

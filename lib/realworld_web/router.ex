@@ -22,11 +22,9 @@ defmodule RealworldWeb.Router do
 
     auth_routes AuthController, Realworld.Accounts.User
 
-    # TODO: should we move these into the live session?
-    live "/login", AuthLive.Index, :login
-    live "/register", AuthLive.Index, :register
-
     ash_authentication_live_session :maybe_authenticated do
+      live "/login", AuthLive.Index, :login
+      live "/register", AuthLive.Index, :register
       live "/profile/:username", ProfileLive.Index, :profile
       live "/article/:slug", ArticleLive.Index, :index
       live "/", PageLive.Index, :index
