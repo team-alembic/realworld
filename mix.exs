@@ -72,7 +72,8 @@ defmodule Realworld.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ash.setup"],
+      setup: ["deps.get", "ash.setup", "seed"],
+      seed: ["run priv/repo/seeds.exs"],
       test: ["ash.setup --quiet", "test"],
       "assets.deploy": ["esbuild default --minify", "phx.digest"],
       precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
