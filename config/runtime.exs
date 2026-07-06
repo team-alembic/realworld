@@ -33,6 +33,15 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
+  # Signs AshAuthentication's tokens — leaking it lets anyone forge sessions.
+  config :realworld,
+    token_signing_secret:
+      System.get_env("TOKEN_SIGNING_SECRET") ||
+        raise("""
+        environment variable TOKEN_SIGNING_SECRET is missing.
+        You can generate one by calling: mix phx.gen.secret
+        """)
+
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 

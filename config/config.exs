@@ -40,8 +40,9 @@ config :realworld, :ash_domains, [Realworld.Accounts, Realworld.Articles, Realwo
 
 config :realworld, ecto_repos: [Realworld.Repo]
 
-config :realworld,
-  token_signing_secret: "WJ/qX8VMGRT192yLhUvJrRM32W1iycdvKVzOVfk6pJSDqF2rRRyhluZW1NRUyo83"
+# The authentication token signing secret is environment-specific:
+# throwaway literals live in dev.exs/test.exs, and prod reads
+# TOKEN_SIGNING_SECRET from the environment in runtime.exs.
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

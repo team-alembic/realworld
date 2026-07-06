@@ -1,5 +1,9 @@
 import Config
 
+# Signs AshAuthentication's tokens. A throwaway value for development only.
+config :realworld,
+  token_signing_secret: "WJ/qX8VMGRT192yLhUvJrRM32W1iycdvKVzOVfk6pJSDqF2rRRyhluZW1NRUyo83"
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

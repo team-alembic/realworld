@@ -1,5 +1,10 @@
 import Config
 
+# Signs AshAuthentication's tokens (registration issues one, so every test
+# that creates a user needs this).
+config :realworld,
+  token_signing_secret: "test-only-signing-secret-not-for-production-use-anywhere"
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :realworld, RealworldWeb.Endpoint,
