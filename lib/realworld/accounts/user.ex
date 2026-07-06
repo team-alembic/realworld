@@ -1,9 +1,23 @@
 defmodule Realworld.Accounts.User do
+  @moduledoc """
+  A user account. The `AshAuthentication` extension supplies the password
+  strategy's register/sign-in actions and token handling (`session_identifier
+  :jti` lets sign-out revoke tokens); this module only declares the profile
+  attributes, identities and policies around them.
+
+  The policy block is the most instructive part: it shows the split between
+  the `AshAuthenticationInteraction` bypass (for the library's internal calls)
+  and the explicit anonymous policies our own sign-in/registration UI needs.
+  """
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     extensions: [AshAuthentication],
     authorizers: [Ash.Policy.Authorizer],
     domain: Realworld.Accounts
+
+  resource do
+    description "A registered user account with a public profile."
+  end
 
   postgres do
     table "users"
@@ -41,6 +55,8 @@ defmodule Realworld.Accounts.User do
     defaults [:read]
 
     read :get_by_username do
+      description "Look one user up by username, as the profile pages do."
+
       argument :username, :string do
         allow_nil? false
       end
@@ -51,6 +67,7 @@ defmodule Realworld.Accounts.User do
     end
 
     update :update do
+      description "Update your own profile — the update policy restricts this to the actor themselves."
       primary? true
       require_atomic? false
       accept [:email, :username, :image, :bio]
@@ -62,12 +79,18 @@ defmodule Realworld.Accounts.User do
 
     attribute :email, :string, allow_nil?: false, public?: true
     attribute :username, :string, allow_nil?: false, public?: true
-    attribute :hashed_password, :string, allow_nil?: false, sensitive?: true
+
+    attribute :hashed_password, :string,
+      allow_nil?: false,
+      sensitive?: true,
+      description: "Password hash managed by AshAuthentication — the plaintext is never stored."
+
     attribute :bio, :string, public?: true
 
     attribute :image, :string,
       default: "/images/smiley-cyrus.jpeg",
-      public?: true
+      public?: true,
+      description: "Profile picture URL; defaults to the locally served smiley avatar."
 
     create_timestamp :created_at
     update_timestamp :updated_at

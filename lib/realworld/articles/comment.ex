@@ -1,9 +1,22 @@
 defmodule Realworld.Articles.Comment do
+  @moduledoc """
+  A comment on an article. Demonstrates two things beyond the usual policies:
+
+    * `Ash.Notifier.PubSub` — creates and destroys broadcast on
+      `"comment:created:<article_id>"` / `"comment:destroyed:<article_id>"`,
+      which `ArticleLive` subscribes to so open article pages update live
+    * an argument-driven read (`:comments_by_article`) filtered with
+      `expr(article_id == ^arg(:article_id))`
+  """
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     authorizers: [Ash.Policy.Authorizer],
     notifiers: [Ash.Notifier.PubSub],
     domain: Realworld.Articles
+
+  resource do
+    description "A user's comment on an article."
+  end
 
   postgres do
     table "comments"
@@ -40,10 +53,12 @@ defmodule Realworld.Articles.Comment do
     defaults [:read, :destroy]
 
     create :create do
+      description "Post a comment on an article as the actor."
       primary? true
       accept [:body]
 
       argument :article_id, :uuid do
+        description "The article being commented on."
         allow_nil? false
       end
 
@@ -53,6 +68,8 @@ defmodule Realworld.Articles.Comment do
     end
 
     read :comments_by_article do
+      description "All comments on one article."
+
       argument :article_id, :uuid do
         allow_nil? false
       end

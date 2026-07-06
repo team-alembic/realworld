@@ -1,4 +1,11 @@
 defmodule Realworld.Profiles do
+  @moduledoc """
+  The Profiles domain: who follows whom.
+
+  A deliberately small domain — one resource, four code-interface functions —
+  useful as the "hello world" of the pattern before reading
+  `Realworld.Articles`.
+  """
   use Ash.Domain, otp_app: :realworld
 
   authorization do

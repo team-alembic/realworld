@@ -14,6 +14,10 @@ defmodule Realworld.Articles.ArticleTag do
   alias Realworld.Articles.Article
   alias Realworld.Articles.Tag
 
+  resource do
+    description "Join table linking articles and tags."
+  end
+
   postgres do
     table "article_tags"
     repo Realworld.Repo

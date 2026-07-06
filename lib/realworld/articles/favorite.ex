@@ -1,9 +1,27 @@
 defmodule Realworld.Articles.Favorite do
+  @moduledoc """
+  A user's favorite of an article — a join between User and Article whose
+  composite primary key is the two foreign keys (no surrogate id).
+
+  Worth reading for:
+
+    * an **idempotent upsert** create (`upsert_identity :unique_favorite`) —
+      favoriting twice updates the same row
+    * actor-scoped reads and destroys via `^actor(:id)` in filters, so a user
+      can only see "did *I* favorite this?" and remove their own favorite
+    * PubSub broadcasts that keep favorite counters live across open pages
+
+  `Realworld.Articles.FavoriteTest` walks through all three.
+  """
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     authorizers: [Ash.Policy.Authorizer],
-    notifiers: Ash.Notifier.PubSub,
+    notifiers: [Ash.Notifier.PubSub],
     domain: Realworld.Articles
+
+  resource do
+    description "A user's favorite of an article; the composite primary key is (user_id, article_id)."
+  end
 
   postgres do
     table "favorites"
@@ -45,6 +63,7 @@ defmodule Realworld.Articles.Favorite do
     defaults [:read]
 
     read :favorited do
+      description "Did the actor favorite this article? A get? read scoped to the actor."
       get? true
 
       argument :article_id, :uuid, allow_nil?: false
@@ -53,6 +72,7 @@ defmodule Realworld.Articles.Favorite do
     end
 
     create :add_favorite do
+      description "Favorite an article as the actor — idempotent thanks to the upsert."
       primary? true
       upsert? true
       upsert_identity :unique_favorite
@@ -63,6 +83,7 @@ defmodule Realworld.Articles.Favorite do
     end
 
     destroy :remove_favorite do
+      description "Remove the actor's own favorite of an article."
       primary? true
       argument :article_id, :uuid, allow_nil?: false
       change filter(expr(article_id == ^arg(:article_id)))

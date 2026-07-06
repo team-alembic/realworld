@@ -1,4 +1,14 @@
 defmodule Realworld.Articles.Changes.RenderMarkdown do
+  @moduledoc """
+  Renders the user-supplied `:body_raw` markdown into sanitized HTML and
+  writes it to `:body` in a `before_action` hook.
+
+  The article page injects `:body` with `raw/1`, so this change is the XSS
+  boundary: MDEx parses with `unsafe: true` (inline HTML allowed through the
+  parser) and then **sanitizes** the output (scripts and event handlers are
+  stripped). `:body` is never accepted by any action — this change is the
+  only writer, via `force_change_attribute/3`.
+  """
   use Ash.Resource.Change
 
   alias Ash.Changeset

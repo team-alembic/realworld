@@ -1,4 +1,10 @@
 defmodule Realworld.Articles.Changes.SlugifyTitle do
+  @moduledoc """
+  Derives `:slug` from `:title` in a `before_action` hook, so publishing
+  "Hello World!" yields the `hello-world` URL. Runs on update too — renaming
+  an article changes its slug (the `unique_slug` identity guarantees no
+  collisions).
+  """
   use Ash.Resource.Change
 
   alias Ash.Changeset

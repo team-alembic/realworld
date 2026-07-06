@@ -1,8 +1,20 @@
 defmodule Realworld.Articles.Tag do
+  @moduledoc """
+  A tag name, unique across the app (`unique_name` identity).
+
+  Tags are rarely created directly — they come into existence through
+  Article's `manage_relationship(:tags, on_lookup: :relate, on_no_match:
+  :create)` when someone publishes with a new tag. See
+  `Realworld.Articles.TagTest`.
+  """
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     authorizers: [Ash.Policy.Authorizer],
     domain: Realworld.Articles
+
+  resource do
+    description "A tag name, unique across the app and shared by all articles that use it."
+  end
 
   postgres do
     table "tags"

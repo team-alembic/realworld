@@ -1,8 +1,21 @@
 defmodule Realworld.Profiles.Follow do
+  @moduledoc """
+  One user following another — the same "join with an upsert" shape as
+  `Realworld.Articles.Favorite`, pointing at User on both ends (`:user`
+  follows `:target`).
+
+  `User` exposes both directions: `has_many :followings` (default foreign
+  key) and `has_many :followers` (overriding `destination_attribute` to
+  `:target_id`). See `Realworld.Profiles.FollowTest`.
+  """
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
     authorizers: [Ash.Policy.Authorizer],
     domain: Realworld.Profiles
+
+  resource do
+    description "One user (:user) following another (:target)."
+  end
 
   postgres do
     table "follows"
@@ -27,10 +40,12 @@ defmodule Realworld.Profiles.Follow do
     defaults [:read]
 
     read :list_followings do
+      description "Everyone the actor follows."
       filter expr(user_id == ^actor(:id))
     end
 
     read :following do
+      description "Does the actor follow this user? A get? read scoped to the actor."
       get? true
 
       argument :target_id, :uuid do
@@ -41,6 +56,8 @@ defmodule Realworld.Profiles.Follow do
     end
 
     create :follow do
+      description "Follow a user as the actor — idempotent thanks to the upsert."
+
       argument :target_id, :uuid do
         allow_nil? false
       end
@@ -53,6 +70,8 @@ defmodule Realworld.Profiles.Follow do
     end
 
     destroy :unfollow do
+      description "Remove the actor's own follow of a user."
+
       argument :target_id, :uuid do
         allow_nil? false
       end
